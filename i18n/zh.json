@@ -16,7 +16,7 @@
   "tracker.title": "正在追踪：{{npc}}",
   "tracker.refreshing": "正在刷新位置……",
   "tracker.location": "当前位置：{{location}}（{{x}}, {{y}}）",
-  "tracker.next-stop": "下一站：{{time}}  {{location}}",
+  "tracker.next-stop": "下一站：{{time}}  {{location}}（{{x}}, {{y}}）",
   "tracker.direction": "方向：{{direction}}，约 {{distance}} 格",
   "quest.prompt.title": "发现送货任务",
   "quest.prompt.delivery": "将 {{count}} 个{{item}}送给{{npc}}。",

@@ -94,6 +94,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
             Selected = true
         };
         Game1.keyboardDispatcher.Subscriber = this.searchBox;
+        this.RestoreTrackingSelection();
     }
 
     public void SetResponse(NpcQueryResponse result)
@@ -801,6 +802,53 @@ internal sealed class NpcSearchMenu : IClickableMenu
         }
         if (this.showingQuests && this.controllerIndex >= this.activeQuests.Count)
             this.controllerIndex = this.activeQuests.Count - 1;
+    }
+
+    private void RestoreTrackingSelection()
+    {
+        TrackerMenuState? state = this.getTrackerState();
+        if (state is null)
+            return;
+
+        string? questKey = this.getTrackedQuestKey();
+        if (questKey is not null)
+        {
+            int questIndex = this.activeQuests.FindIndex(
+                quest => string.Equals(quest.Key, questKey, StringComparison.Ordinal)
+            );
+            if (questIndex >= 0)
+            {
+                this.showingQuests = true;
+                this.selectedQuestKey = questKey;
+                this.controllerIndex = questIndex;
+                int maxQuestOffset = Math.Max(0, this.activeQuests.Count - this.GetVisibleListRows());
+                this.questListOffset = Math.Clamp(
+                    questIndex - this.GetVisibleListRows() / 2,
+                    0,
+                    maxQuestOffset
+                );
+                this.searchBox.Selected = false;
+                Game1.keyboardDispatcher.Subscriber = null;
+                return;
+            }
+        }
+
+        this.selectedNpc = state.NpcName;
+        this.response = state.Response;
+        this.loading = state.Response is null;
+        int npcIndex = this.filteredNpcs.FindIndex(
+            npc => string.Equals(npc.InternalName, state.NpcName, StringComparison.OrdinalIgnoreCase)
+        );
+        if (npcIndex >= 0)
+        {
+            this.controllerIndex = npcIndex;
+            int maxNpcOffset = Math.Max(0, this.filteredNpcs.Count - this.GetVisibleListRows());
+            this.listOffset = Math.Clamp(
+                npcIndex - this.GetVisibleListRows() / 2,
+                0,
+                maxNpcOffset
+            );
+        }
     }
 
     private DeliveryQuestSnapshot? GetSelectedQuest()

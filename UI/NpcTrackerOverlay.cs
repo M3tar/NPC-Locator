@@ -143,7 +143,13 @@ internal sealed class NpcTrackerOverlay
                 string nextName = this.locationNames.Resolve(next.LocationName, next.LocationDisplayName);
                 this.DrawLine(
                     b,
-                    this.i18n.Get("tracker.next-stop", new { time = FormatTime(next.Time), location = nextName }),
+                    this.i18n.Get("tracker.next-stop", new
+                    {
+                        time = FormatTime(next.Time),
+                        location = nextName,
+                        x = next.TileX,
+                        y = next.TileY
+                    }),
                     x,
                     y,
                     Game1.textColor

@@ -16,7 +16,7 @@
   "tracker.title": "Tracking: {{npc}}",
   "tracker.refreshing": "Refreshing location…",
   "tracker.location": "Current location: {{location}} ({{x}}, {{y}})",
-  "tracker.next-stop": "Next: {{time}}  {{location}}",
+  "tracker.next-stop": "Next: {{time}}  {{location}} ({{x}}, {{y}})",
   "tracker.direction": "Direction: {{direction}}, about {{distance}} tiles",
   "quest.prompt.title": "Delivery quest found",
   "quest.prompt.delivery": "Bring {{count}} {{item}} to {{npc}}.",
