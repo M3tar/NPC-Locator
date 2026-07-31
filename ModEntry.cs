@@ -16,6 +16,7 @@ public sealed class ModEntry : Mod
     private MultiplayerQueryCoordinator? queryCoordinator;
     private NpcTrackerOverlay? tracker;
     private QuestPromptOverlay? questPrompt;
+    private QuestTrackingService? questTracking;
 
     public override void Entry(IModHelper helper)
     {
@@ -33,10 +34,11 @@ public sealed class ModEntry : Mod
             helper.Translation,
             npcName => this.queryCoordinator?.QueryFromTracker(npcName)
         );
+        this.questTracking = new QuestTrackingService();
         this.questPrompt = new QuestPromptOverlay(
             this.config,
             helper.Translation,
-            new QuestTrackingService(),
+            this.questTracking,
             this.OnTrackQuest,
             () => this.tracker?.Stop(),
             npcName => this.tracker?.IsTracking(npcName) == true,
@@ -256,7 +258,10 @@ public sealed class ModEntry : Mod
             npcName => this.queryCoordinator?.QueryFromMenu(npcName),
             this.OnTrackNpc,
             this.OnStopTracking,
-            npcName => this.tracker?.IsTracking(npcName) == true
+            npcName => this.tracker?.IsTracking(npcName) == true,
+            () => this.questTracking?.GetActiveQuests() ?? Array.Empty<DeliveryQuestSnapshot>(),
+            quest => this.questPrompt?.TrackQuest(quest),
+            questKey => this.questPrompt?.IsTrackingQuest(questKey) == true
         );
     }
 

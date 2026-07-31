@@ -88,6 +88,21 @@ internal sealed class QuestPromptOverlay
         this.trackedNpcName = null;
     }
 
+    public bool IsTrackingQuest(string questKey)
+    {
+        return string.Equals(this.trackedQuestKey, questKey, StringComparison.Ordinal);
+    }
+
+    public void TrackQuest(DeliveryQuestSnapshot quest)
+    {
+        this.handledQuestKeys.Add(quest.Key);
+        this.trackedQuestKey = quest.Key;
+        this.trackedNpcName = quest.NpcName;
+        if (string.Equals(this.prompt?.Key, quest.Key, StringComparison.Ordinal))
+            this.prompt = null;
+        this.trackQuest(quest);
+    }
+
     public void Clear()
     {
         this.prompt = null;
@@ -104,11 +119,7 @@ internal sealed class QuestPromptOverlay
         if (this.GetTrackBounds().Contains(x, y))
         {
             DeliveryQuestSnapshot selected = this.prompt!;
-            this.handledQuestKeys.Add(selected.Key);
-            this.trackedQuestKey = selected.Key;
-            this.trackedNpcName = selected.NpcName;
-            this.prompt = null;
-            this.trackQuest(selected);
+            this.TrackQuest(selected);
             Game1.playSound("smallSelect");
             return true;
         }
