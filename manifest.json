@@ -2,7 +2,7 @@
   "Name": "Multiplayer NPC Locator",
   "Author": "Mercury",
   "Version": "0.1.0",
-  "Description": "Queries host-authoritative NPC locations and daily schedules in multiplayer.",
+  "Description": "Finds and tracks NPC locations, schedules, and delivery quest targets in multiplayer.",
   "UniqueID": "Mercury.MultiplayerNpcLocator",
   "EntryDll": "MultiplayerNpcLocator.dll",
   "MinimumApiVersion": "4.5.2",

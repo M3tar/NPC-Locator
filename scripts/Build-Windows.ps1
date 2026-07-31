@@ -4,12 +4,15 @@ param(
     [ValidateSet("Debug", "Release")]
     [string] $Configuration = "Release",
     [switch] $Install,
-    [switch] $UpdateExisting
+    [switch] $UpdateExisting,
+    [switch] $Package
 )
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $ProjectFile = Join-Path $ProjectRoot "MultiplayerNpcLocator.csproj"
+$ManifestPath = Join-Path $ProjectRoot "manifest.json"
+$Manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 
 function Find-GamePath {
     param([string] $RequestedPath)
@@ -113,7 +116,7 @@ if ($Install) {
     if (Test-Path $Symbols) {
         Copy-Item $Symbols $TargetPath -Force
     }
-    Copy-Item (Join-Path $ProjectRoot "manifest.json") $TargetPath -Force
+    Copy-Item $ManifestPath $TargetPath -Force
 
     $SourceI18n = Join-Path $ProjectRoot "i18n"
     if (Test-Path $SourceI18n) {
@@ -123,7 +126,60 @@ if ($Install) {
         }
         Get-ChildItem $SourceI18n -File | Copy-Item -Destination $TargetI18n -Force
     }
-    Write-Host "Installed or updated validation build at: $TargetPath"
+    Write-Host "Installed or updated build at: $TargetPath"
 }
 
-Write-Host "Build preparation is complete. See the phase validation guide in the docs folder for the in-game checks."
+if ($Package) {
+    if ($Configuration -ne "Release") {
+        throw "Installable packages must use the Release configuration. Remove '-Configuration Debug' and try again."
+    }
+
+    $DistPath = Join-Path $ProjectRoot "dist"
+    if (-not (Test-Path $DistPath)) {
+        New-Item -ItemType Directory -Path $DistPath | Out-Null
+    }
+
+    $PackagePath = Join-Path $DistPath "MultiplayerNpcLocator-$($Manifest.Version).zip"
+    $StagingPath = Join-Path ([System.IO.Path]::GetTempPath()) ("MultiplayerNpcLocator-package-" + [Guid]::NewGuid().ToString("N"))
+    $PackageFolder = Join-Path $StagingPath "MultiplayerNpcLocator"
+    try {
+        New-Item -ItemType Directory -Path $PackageFolder -Force | Out-Null
+        Copy-Item $ModAssembly $PackageFolder -Force
+        Copy-Item $ManifestPath $PackageFolder -Force
+
+        $SourceI18n = Join-Path $ProjectRoot "i18n"
+        if (Test-Path $SourceI18n) {
+            Copy-Item $SourceI18n $PackageFolder -Recurse -Force
+        }
+
+        foreach ($DocumentName in @("README.md", "README.zh-CN.md", "CHANGELOG.md")) {
+            $DocumentPath = Join-Path $ProjectRoot $DocumentName
+            if (Test-Path $DocumentPath) {
+                Copy-Item $DocumentPath $PackageFolder -Force
+            }
+        }
+
+        $KnownLimitationsPath = Join-Path $ProjectRoot "docs\KNOWN_LIMITATIONS.md"
+        if (Test-Path $KnownLimitationsPath) {
+            $PackageDocsPath = Join-Path $PackageFolder "docs"
+            New-Item -ItemType Directory -Path $PackageDocsPath -Force | Out-Null
+            Copy-Item $KnownLimitationsPath $PackageDocsPath -Force
+        }
+
+        Compress-Archive -Path $PackageFolder -DestinationPath $PackagePath -CompressionLevel Optimal -Force
+    }
+    finally {
+        if (Test-Path $StagingPath) {
+            Remove-Item $StagingPath -Recurse -Force
+        }
+    }
+
+    if (-not (Test-Path $PackagePath)) {
+        throw "Packaging completed without creating the expected archive at '$PackagePath'."
+    }
+    $PackageHash = (Get-FileHash $PackagePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    Write-Host "Installable package: $PackagePath"
+    Write-Host "SHA-256: $PackageHash"
+}
+
+Write-Host "Build preparation is complete. See docs\PHASE5_VALIDATION.md for the final in-game checks."
