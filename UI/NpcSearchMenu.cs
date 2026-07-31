@@ -28,6 +28,8 @@ internal sealed class NpcSearchMenu : IClickableMenu
     private readonly Func<IReadOnlyList<DeliveryQuestSnapshot>> getActiveQuests;
     private readonly Action<DeliveryQuestSnapshot> trackQuest;
     private readonly Func<string, bool> isTrackingQuest;
+    private readonly Func<TrackerMenuState?> getTrackerState;
+    private readonly Func<string?> getTrackedQuestKey;
     private readonly List<NpcListEntry> allNpcs;
     private readonly LocationDisplayNameResolver locationNames;
     private readonly Texture2D parchmentTexture;
@@ -55,7 +57,9 @@ internal sealed class NpcSearchMenu : IClickableMenu
         Func<string, bool> isTracking,
         Func<IReadOnlyList<DeliveryQuestSnapshot>> getActiveQuests,
         Action<DeliveryQuestSnapshot> trackQuest,
-        Func<string, bool> isTrackingQuest
+        Func<string, bool> isTrackingQuest,
+        Func<TrackerMenuState?> getTrackerState,
+        Func<string?> getTrackedQuestKey
     )
         : base(
             (Game1.uiViewport.Width - MenuWidth) / 2,
@@ -73,6 +77,8 @@ internal sealed class NpcSearchMenu : IClickableMenu
         this.getActiveQuests = getActiveQuests;
         this.trackQuest = trackQuest;
         this.isTrackingQuest = isTrackingQuest;
+        this.getTrackerState = getTrackerState;
+        this.getTrackedQuestKey = getTrackedQuestKey;
         this.locationNames = new LocationDisplayNameResolver(i18n);
         this.allNpcs = npcs.OrderBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
         this.filteredNpcs = new List<NpcListEntry>(this.allNpcs);
@@ -329,6 +335,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
             this.DrawResult(b);
             this.DrawActions(b);
         }
+        this.DrawTrackingStatus(b);
         this.upperRightCloseButton?.draw(b);
         this.drawMouse(b);
     }
@@ -445,6 +452,63 @@ internal sealed class NpcSearchMenu : IClickableMenu
             ? this.i18n.Get("quest.menu.stop-tracking")
             : this.i18n.Get("quest.menu.track-target");
         this.DrawButton(b, this.GetTaskTrackButtonBounds(), label, enabled: true);
+    }
+
+    private void DrawTrackingStatus(SpriteBatch b)
+    {
+        TrackerMenuState? state = this.getTrackerState();
+        if (state is null)
+            return;
+
+        Rectangle bounds = this.GetTrackingStatusBounds();
+        b.Draw(Game1.staminaRect, bounds, Color.SandyBrown * 0.28f);
+        int x = bounds.X + 14;
+        int y = bounds.Y + 8;
+
+        string? questKey = this.getTrackedQuestKey();
+        DeliveryQuestSnapshot? quest = questKey is null
+            ? null
+            : this.activeQuests.FirstOrDefault(
+                entry => string.Equals(entry.Key, questKey, StringComparison.Ordinal)
+            );
+        string heading = questKey is null
+            ? this.i18n.Get("tracking.card.manual", new { npc = state.NpcDisplayName })
+            : quest is not null
+                ? this.i18n.Get("tracking.card.quest", new
+                {
+                    quest = quest.Title,
+                    npc = state.NpcDisplayName
+                })
+                : this.i18n.Get("tracking.card.quest-fallback", new { npc = state.NpcDisplayName });
+        this.DrawLine(b, this.FitText(heading, bounds.Width - 28), x, y, Game1.textColor);
+        y += 30;
+
+        NpcQueryResponse? response = state.Response;
+        string detail;
+        Color detailColor = Game1.textColor;
+        if (response is null)
+        {
+            detail = this.i18n.Get("tracking.card.refreshing");
+        }
+        else if (response.Status != QueryStatus.Success)
+        {
+            detail = this.TranslateStatus(response.Status);
+            detailColor = Color.DarkRed;
+        }
+        else if (response.Location is null)
+        {
+            detail = this.TranslateStatus(response.LocationStatus);
+            detailColor = Color.DarkRed;
+        }
+        else
+        {
+            string location = this.locationNames.Resolve(
+                response.Location.InternalName,
+                response.Location.DisplayName
+            );
+            detail = this.i18n.Get("tracking.card.location", new { location });
+        }
+        this.DrawLine(b, this.FitText(detail, bounds.Width - 28), x, y, detailColor);
     }
 
     private void DrawNpcList(SpriteBatch b)
@@ -587,7 +651,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
 
     private int GetVisibleListRows() => this.GetListBounds().Height / RowHeight;
 
-    private int GetVisibleScheduleRows() => 6;
+    private int GetVisibleScheduleRows() => this.getTrackerState() is null ? 6 : 4;
 
     private void DrawActions(SpriteBatch b)
     {
@@ -637,6 +701,12 @@ internal sealed class NpcSearchMenu : IClickableMenu
     {
         int x = this.xPositionOnScreen + Padding + LeftWidth + 28;
         return new Rectangle(x, this.yPositionOnScreen + this.height - 68, 230, 48);
+    }
+
+    private Rectangle GetTrackingStatusBounds()
+    {
+        int x = this.xPositionOnScreen + Padding + LeftWidth + 28;
+        return new Rectangle(x, this.yPositionOnScreen + this.height - 154, 540, 76);
     }
 
     private bool CanTrackSelectedNpc()
@@ -733,6 +803,21 @@ internal sealed class NpcSearchMenu : IClickableMenu
             : this.activeQuests.FirstOrDefault(
                 quest => string.Equals(quest.Key, this.selectedQuestKey, StringComparison.Ordinal)
             );
+    }
+
+    private string FitText(string text, int maxWidth)
+    {
+        if (Game1.smallFont.MeasureString(text).X <= maxWidth)
+            return text;
+
+        const string ellipsis = "…";
+        int length = text.Length;
+        while (length > 1
+            && Game1.smallFont.MeasureString(text[..length] + ellipsis).X > maxWidth)
+        {
+            length--;
+        }
+        return text[..length] + ellipsis;
     }
 
     private string ResolveNpcDisplayName(string internalName, string? hostDisplayName)

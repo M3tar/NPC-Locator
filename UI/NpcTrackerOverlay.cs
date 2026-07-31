@@ -41,6 +41,18 @@ internal sealed class NpcTrackerOverlay
         return string.Equals(this.TrackedNpcName, npcName, StringComparison.OrdinalIgnoreCase);
     }
 
+    public TrackerMenuState? GetMenuState()
+    {
+        if (this.TrackedNpcName is null)
+            return null;
+
+        return new TrackerMenuState(
+            this.TrackedNpcName,
+            this.ResolveNpcDisplayName(this.TrackedNpcName, this.response?.NpcDisplayName),
+            this.response
+        );
+    }
+
     public void Track(string npcName, NpcQueryResponse? initialResponse)
     {
         this.TrackedNpcName = npcName;
@@ -217,3 +229,9 @@ internal sealed class NpcTrackerOverlay
         return $"{time / 100:00}:{time % 100:00}";
     }
 }
+
+internal sealed record TrackerMenuState(
+    string NpcName,
+    string NpcDisplayName,
+    NpcQueryResponse? Response
+);

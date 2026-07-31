@@ -28,6 +28,8 @@ internal sealed class QuestPromptOverlay
     private string? trackedQuestKey;
     private string? trackedNpcName;
 
+    public string? TrackedQuestKey => this.trackedQuestKey;
+
     public QuestPromptOverlay(
         ModConfig config,
         ITranslationHelper i18n,

@@ -261,7 +261,9 @@ public sealed class ModEntry : Mod
             npcName => this.tracker?.IsTracking(npcName) == true,
             () => this.questTracking?.GetActiveQuests() ?? Array.Empty<DeliveryQuestSnapshot>(),
             quest => this.questPrompt?.TrackQuest(quest),
-            questKey => this.questPrompt?.IsTrackingQuest(questKey) == true
+            questKey => this.questPrompt?.IsTrackingQuest(questKey) == true,
+            () => this.tracker?.GetMenuState(),
+            () => this.questPrompt?.TrackedQuestKey
         );
     }
 
