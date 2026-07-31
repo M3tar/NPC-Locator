@@ -78,10 +78,6 @@ public sealed class ModEntry : Mod
         if (Game1.activeClickableMenu is not null)
             return;
 
-        // The multiplayer host remains silent by default; single-player is kept for local testing.
-        if (Context.IsMultiplayer && Context.IsMainPlayer)
-            return;
-
         List<NpcListEntry> npcs = this.GetNpcList();
         Game1.activeClickableMenu = new NpcSearchMenu(
             npcs,
