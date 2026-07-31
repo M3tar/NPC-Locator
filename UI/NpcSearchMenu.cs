@@ -354,8 +354,10 @@ internal sealed class NpcSearchMenu : IClickableMenu
     private void DrawTab(SpriteBatch b, Rectangle bounds, string label, bool selected)
     {
         Color tint = selected
-            ? Color.SandyBrown * 0.55f
-            : bounds.Contains(Game1.getMousePosition(true)) ? Color.Wheat * 0.65f : Color.White * 0.35f;
+            ? new Color(196, 135, 70) * 0.55f
+            : bounds.Contains(Game1.getMousePosition(true))
+                ? new Color(222, 184, 120) * 0.4f
+                : new Color(120, 78, 48) * 0.12f;
         b.Draw(Game1.staminaRect, bounds, tint);
         Vector2 size = Game1.smallFont.MeasureString(label);
         b.DrawString(
@@ -402,7 +404,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
     private void DrawQuestResult(SpriteBatch b)
     {
         int x = this.xPositionOnScreen + Padding + LeftWidth + 28;
-        int y = this.yPositionOnScreen + 92;
+        int y = this.yPositionOnScreen + 82;
         DeliveryQuestSnapshot? quest = this.GetSelectedQuest();
         if (quest is null)
         {
