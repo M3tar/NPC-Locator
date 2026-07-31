@@ -1,0 +1,9 @@
+{
+  "Name": "Multiplayer NPC Locator",
+  "Author": "Mercury",
+  "Version": "0.1.0",
+  "Description": "Queries host-authoritative NPC locations and daily schedules in multiplayer.",
+  "UniqueID": "Mercury.MultiplayerNpcLocator",
+  "EntryDll": "MultiplayerNpcLocator.dll",
+  "MinimumApiVersion": "4.5.2"
+}

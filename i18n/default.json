@@ -1,0 +1,15 @@
+{
+  "menu.title": "Multiplayer NPC Locator",
+  "menu.no-results": "No matching NPCs.",
+  "menu.select-prompt": "Select an NPC to query the host.",
+  "menu.loading": "Querying host…",
+  "menu.current-location": "Current location",
+  "menu.daily-schedule": "Today's standard schedule",
+  "status.npc-not-found": "NPC temporarily unavailable.",
+  "status.location-unavailable": "Current location unavailable.",
+  "status.schedule-unavailable": "Standard schedule unavailable.",
+  "status.permission-denied": "The host disabled sharing for this information.",
+  "status.unsupported-protocol": "The host and client versions are incompatible.",
+  "status.host-not-ready": "The host is unavailable or not ready.",
+  "status.rate-limited": "Too many requests. Please wait a moment."
+}

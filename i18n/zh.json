@@ -1,0 +1,15 @@
+{
+  "menu.title": "联机 NPC 定位器",
+  "menu.no-results": "没有匹配的 NPC。",
+  "menu.select-prompt": "请选择一名 NPC 向主机查询。",
+  "menu.loading": "正在查询主机……",
+  "menu.current-location": "实时位置",
+  "menu.daily-schedule": "今日标准日程",
+  "status.npc-not-found": "NPC 暂时无法定位。",
+  "status.location-unavailable": "实时位置不可用。",
+  "status.schedule-unavailable": "今日标准日程不可用。",
+  "status.permission-denied": "主机已关闭此项信息共享。",
+  "status.unsupported-protocol": "主机与客户端版本不兼容。",
+  "status.host-not-ready": "主机不可用或尚未准备完成。",
+  "status.rate-limited": "请求过于频繁，请稍后再试。"
+}
