@@ -121,7 +121,18 @@ internal sealed class NpcTrackerOverlay
 
         LocationSnapshot location = this.response.Location;
         string locationName = this.locationNames.Resolve(location.InternalName, location.DisplayName);
-        this.DrawLine(b, this.i18n.Get("tracker.location", new { location = locationName }), x, y, Game1.textColor);
+        this.DrawLine(
+            b,
+            this.i18n.Get("tracker.location", new
+            {
+                location = locationName,
+                x = location.TileX,
+                y = location.TileY
+            }),
+            x,
+            y,
+            Game1.textColor
+        );
         y += 30;
 
         if (this.config.ShowNextStop)

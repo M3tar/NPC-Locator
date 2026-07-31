@@ -506,7 +506,12 @@ internal sealed class NpcSearchMenu : IClickableMenu
                 response.Location.InternalName,
                 response.Location.DisplayName
             );
-            detail = this.i18n.Get("tracking.card.location", new { location });
+            detail = this.i18n.Get("tracking.card.location", new
+            {
+                location,
+                x = response.Location.TileX,
+                y = response.Location.TileY
+            });
         }
         this.DrawLine(b, this.FitText(detail, bounds.Width - 28), x, y, detailColor);
     }
