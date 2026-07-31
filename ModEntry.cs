@@ -15,6 +15,7 @@ public sealed class ModEntry : Mod
     private ModConfig? config;
     private MultiplayerQueryCoordinator? queryCoordinator;
     private NpcTrackerOverlay? tracker;
+    private QuestPromptOverlay? questPrompt;
 
     public override void Entry(IModHelper helper)
     {
@@ -32,8 +33,18 @@ public sealed class ModEntry : Mod
             helper.Translation,
             npcName => this.queryCoordinator?.QueryFromTracker(npcName)
         );
+        this.questPrompt = new QuestPromptOverlay(
+            this.config,
+            helper.Translation,
+            new QuestTrackingService(),
+            this.OnTrackQuest,
+            () => this.tracker?.Stop(),
+            npcName => this.tracker?.IsTracking(npcName) == true,
+            () => this.config.ShowTrackerOverlay && this.tracker?.TrackedNpcName is not null
+        );
         helper.Events.Input.ButtonPressed += this.OnButtonPressed;
         helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+        helper.Events.GameLoop.OneSecondUpdateTicked += this.OnOneSecondUpdateTicked;
         helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
         helper.Events.GameLoop.DayStarted += this.OnDayStarted;
         helper.Events.GameLoop.ReturnedToTitle += this.OnReturnedToTitle;
@@ -81,6 +92,14 @@ public sealed class ModEntry : Mod
             () => this.Helper.Translation.Get("config.open-menu-key.name"),
             () => this.Helper.Translation.Get("config.open-menu-key.tooltip"),
             fieldId: nameof(ModConfig.OpenMenuKey)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.EnableQuestDetection,
+            value => this.config.EnableQuestDetection = value,
+            () => this.Helper.Translation.Get("config.quest-detection.name"),
+            () => this.Helper.Translation.Get("config.quest-detection.tooltip"),
+            fieldId: nameof(ModConfig.EnableQuestDetection)
         );
 
         api.AddSectionTitle(this.ModManifest, () => this.Helper.Translation.Get("config.section.tracker"));
@@ -179,6 +198,7 @@ public sealed class ModEntry : Mod
 
         ModConfig defaults = new();
         this.config.OpenMenuKey = defaults.OpenMenuKey;
+        this.config.EnableQuestDetection = defaults.EnableQuestDetection;
         this.config.ShowTrackerOverlay = defaults.ShowTrackerOverlay;
         this.config.TrackerPosition = defaults.TrackerPosition;
         this.config.TrackerOpacityPercent = defaults.TrackerOpacityPercent;
@@ -204,6 +224,16 @@ public sealed class ModEntry : Mod
 
     private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
     {
+        if (e.Button == SButton.MouseLeft
+            && this.questPrompt?.ReceiveLeftClick(
+                Game1.getMousePosition(true).X,
+                Game1.getMousePosition(true).Y
+            ) == true)
+        {
+            this.Helper.Input.Suppress(e.Button);
+            return;
+        }
+
         if (!Context.IsWorldReady
             || this.config is null
             || !this.config.OpenMenuKey.JustPressed())
@@ -225,7 +255,7 @@ public sealed class ModEntry : Mod
             this.Helper.Translation,
             npcName => this.queryCoordinator?.QueryFromMenu(npcName),
             this.OnTrackNpc,
-            () => this.tracker?.Stop(),
+            this.OnStopTracking,
             npcName => this.tracker?.IsTracking(npcName) == true
         );
     }
@@ -239,7 +269,24 @@ public sealed class ModEntry : Mod
 
     private void OnTrackNpc(string npcName, NpcQueryResponse? response)
     {
+        this.questPrompt?.DetachTaskTracking();
         this.tracker?.Track(npcName, response);
+    }
+
+    private void OnTrackQuest(DeliveryQuestSnapshot quest)
+    {
+        this.tracker?.Track(quest.NpcName, null);
+    }
+
+    private void OnStopTracking()
+    {
+        this.questPrompt?.DetachTaskTracking();
+        this.tracker?.Stop();
+    }
+
+    private void OnOneSecondUpdateTicked(object? sender, OneSecondUpdateTickedEventArgs e)
+    {
+        this.questPrompt?.Scan();
     }
 
     private void OnTimeChanged(object? sender, TimeChangedEventArgs e)
@@ -255,6 +302,7 @@ public sealed class ModEntry : Mod
     private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs e)
     {
         this.tracker?.Stop();
+        this.questPrompt?.Clear();
     }
 
     private void OnWarped(object? sender, WarpedEventArgs e)
@@ -266,7 +314,10 @@ public sealed class ModEntry : Mod
     private void OnRenderedHud(object? sender, RenderedHudEventArgs e)
     {
         if (Context.IsWorldReady && Game1.activeClickableMenu is null)
+        {
             this.tracker?.Draw(e.SpriteBatch);
+            this.questPrompt?.Draw(e.SpriteBatch);
+        }
     }
 
     private void OnPeerDisconnected(object? sender, PeerDisconnectedEventArgs e)

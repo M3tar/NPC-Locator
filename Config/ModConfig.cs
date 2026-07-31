@@ -6,6 +6,8 @@ internal sealed class ModConfig
 {
     public KeybindList OpenMenuKey { get; set; } = KeybindList.Parse("F3");
 
+    public bool EnableQuestDetection { get; set; } = true;
+
     public bool ShowTrackerOverlay { get; set; } = true;
     public string TrackerPosition { get; set; } = "TopLeft";
     public int TrackerOpacityPercent { get; set; } = 90;
