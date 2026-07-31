@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MultiplayerNpcLocator.Framework;
 using MultiplayerNpcLocator.Multiplayer;
 using StardewModdingAPI;
 using StardewValley;
@@ -20,13 +22,18 @@ internal sealed class NpcSearchMenu : IClickableMenu
 
     private readonly ITranslationHelper i18n;
     private readonly Action<string> queryNpc;
+    private readonly Action<string, NpcQueryResponse?> trackNpc;
+    private readonly Action stopTracking;
+    private readonly Func<string, bool> isTracking;
     private readonly List<NpcListEntry> allNpcs;
+    private readonly LocationDisplayNameResolver locationNames;
     private readonly Texture2D parchmentTexture;
     private readonly TextBox searchBox;
     private List<NpcListEntry> filteredNpcs;
     private string previousSearch = "";
     private int listOffset;
     private int scheduleOffset;
+    private int controllerIndex = -1;
     private string? selectedNpc;
     private bool loading;
     private NpcQueryResponse? response;
@@ -34,7 +41,10 @@ internal sealed class NpcSearchMenu : IClickableMenu
     public NpcSearchMenu(
         IEnumerable<NpcListEntry> npcs,
         ITranslationHelper i18n,
-        Action<string> queryNpc
+        Action<string> queryNpc,
+        Action<string, NpcQueryResponse?> trackNpc,
+        Action stopTracking,
+        Func<string, bool> isTracking
     )
         : base(
             (Game1.uiViewport.Width - MenuWidth) / 2,
@@ -46,6 +56,10 @@ internal sealed class NpcSearchMenu : IClickableMenu
     {
         this.i18n = i18n;
         this.queryNpc = queryNpc;
+        this.trackNpc = trackNpc;
+        this.stopTracking = stopTracking;
+        this.isTracking = isTracking;
+        this.locationNames = new LocationDisplayNameResolver(i18n);
         this.allNpcs = npcs.OrderBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
         this.filteredNpcs = new List<NpcListEntry>(this.allNpcs);
         this.parchmentTexture = Game1.content.Load<Texture2D>("LooseSprites\\letterBG");
@@ -89,6 +103,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
                 || entry.DisplayName.Contains(search, StringComparison.CurrentCultureIgnoreCase))
             .ToList();
         this.listOffset = 0;
+        this.controllerIndex = this.filteredNpcs.Count > 0 ? 0 : -1;
     }
 
     public override void receiveLeftClick(int x, int y, bool playSound = true)
@@ -96,6 +111,19 @@ internal sealed class NpcSearchMenu : IClickableMenu
         base.receiveLeftClick(x, y, playSound);
         if (this.readyToClose() && this.upperRightCloseButton?.containsPoint(x, y) == true)
             return;
+
+        if (!this.loading && this.selectedNpc is not null && this.GetRefreshButtonBounds().Contains(x, y))
+        {
+            this.loading = true;
+            Game1.playSound("smallSelect");
+            this.queryNpc(this.selectedNpc);
+            return;
+        }
+        if (this.CanTrackSelectedNpc() && this.GetTrackButtonBounds().Contains(x, y))
+        {
+            this.ToggleTracking();
+            return;
+        }
 
         Rectangle listBounds = this.GetListBounds();
         if (!listBounds.Contains(x, y))
@@ -106,13 +134,8 @@ internal sealed class NpcSearchMenu : IClickableMenu
         if (index < 0 || index >= this.filteredNpcs.Count)
             return;
 
-        NpcListEntry entry = this.filteredNpcs[index];
-        this.selectedNpc = entry.InternalName;
-        this.loading = true;
-        this.response = null;
-        this.scheduleOffset = 0;
-        Game1.playSound("smallSelect");
-        this.queryNpc(entry.InternalName);
+        this.controllerIndex = index;
+        this.SelectNpc(this.filteredNpcs[index]);
     }
 
     public override void receiveScrollWheelAction(int direction)
@@ -140,6 +163,36 @@ internal sealed class NpcSearchMenu : IClickableMenu
             return;
         }
         base.receiveKeyPress(key);
+    }
+
+    public override void receiveGamePadButton(Buttons button)
+    {
+        switch (button)
+        {
+            case Buttons.B:
+                this.exitThisMenu();
+                return;
+            case Buttons.DPadUp:
+            case Buttons.LeftThumbstickUp:
+                this.MoveControllerSelection(-1);
+                return;
+            case Buttons.DPadDown:
+            case Buttons.LeftThumbstickDown:
+                this.MoveControllerSelection(1);
+                return;
+            case Buttons.A when this.controllerIndex >= 0 && this.controllerIndex < this.filteredNpcs.Count:
+                this.SelectNpc(this.filteredNpcs[this.controllerIndex]);
+                return;
+            case Buttons.X when this.selectedNpc is not null:
+                this.loading = true;
+                this.queryNpc(this.selectedNpc);
+                return;
+            case Buttons.Y when this.CanTrackSelectedNpc():
+                this.ToggleTracking();
+                return;
+        }
+
+        base.receiveGamePadButton(button);
     }
 
     public override void gameWindowSizeChanged(Rectangle oldBounds, Rectangle newBounds)
@@ -178,6 +231,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
 
         this.DrawNpcList(b);
         this.DrawResult(b);
+        this.DrawActions(b);
         this.upperRightCloseButton?.draw(b);
         this.drawMouse(b);
     }
@@ -196,6 +250,8 @@ internal sealed class NpcSearchMenu : IClickableMenu
             Rectangle row = new(bounds.X + 4, bounds.Y + visibleIndex * RowHeight, bounds.Width - 8, RowHeight);
             if (string.Equals(entry.InternalName, this.selectedNpc, StringComparison.OrdinalIgnoreCase))
                 b.Draw(Game1.staminaRect, row, Color.SandyBrown * 0.35f);
+            else if (index == this.controllerIndex)
+                b.Draw(Game1.staminaRect, row, Color.Wheat * 0.45f);
             else if (row.Contains(Game1.getMousePosition(true)))
                 b.Draw(Game1.staminaRect, row, Color.White * 0.25f);
 
@@ -237,9 +293,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
             return;
 
         NpcQueryResponse result = this.response;
-        string heading = string.IsNullOrWhiteSpace(result.NpcDisplayName)
-            ? result.NpcName
-            : result.NpcDisplayName;
+        string heading = this.ResolveNpcDisplayName(result.NpcName, result.NpcDisplayName);
         b.DrawString(Game1.dialogueFont, heading, new Vector2(x, y), Game1.textColor);
         y += 56;
 
@@ -257,9 +311,10 @@ internal sealed class NpcSearchMenu : IClickableMenu
         }
         else
         {
-            string location = string.IsNullOrWhiteSpace(result.Location.DisplayName)
-                ? result.Location.InternalName
-                : result.Location.DisplayName;
+            string location = this.locationNames.Resolve(
+                result.Location.InternalName,
+                result.Location.DisplayName
+            );
             this.DrawLine(
                 b,
                 $"{location}  ({result.Location.TileX}, {result.Location.TileY})",
@@ -281,9 +336,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
         int rows = this.GetVisibleScheduleRows();
         foreach (ScheduleEntrySnapshot entry in result.Schedule.Skip(this.scheduleOffset).Take(rows))
         {
-            string location = string.IsNullOrWhiteSpace(entry.LocationDisplayName)
-                ? entry.LocationName
-                : entry.LocationDisplayName;
+            string location = this.locationNames.Resolve(entry.LocationName, entry.LocationDisplayName);
             this.DrawLine(
                 b,
                 $"{FormatTime(entry.Time)}  {location}  ({entry.TileX}, {entry.TileY})",
@@ -312,7 +365,107 @@ internal sealed class NpcSearchMenu : IClickableMenu
 
     private int GetVisibleListRows() => this.GetListBounds().Height / RowHeight;
 
-    private int GetVisibleScheduleRows() => 10;
+    private int GetVisibleScheduleRows() => 6;
+
+    private void DrawActions(SpriteBatch b)
+    {
+        if (this.selectedNpc is null)
+            return;
+
+        this.DrawButton(b, this.GetRefreshButtonBounds(), this.i18n.Get("menu.refresh"), enabled: !this.loading);
+        if (this.CanTrackSelectedNpc())
+        {
+            string label = this.isTracking(this.selectedNpc)
+                ? this.i18n.Get("menu.stop-tracking")
+                : this.i18n.Get("menu.start-tracking");
+            this.DrawButton(b, this.GetTrackButtonBounds(), label, enabled: true);
+        }
+    }
+
+    private void DrawButton(SpriteBatch b, Rectangle bounds, string label, bool enabled)
+    {
+        Color tint = !enabled
+            ? Color.Gray * 0.65f
+            : bounds.Contains(Game1.getMousePosition(true))
+                ? Color.Wheat
+                : Color.White;
+        drawTextureBox(b, bounds.X, bounds.Y, bounds.Width, bounds.Height, tint);
+        Vector2 size = Game1.smallFont.MeasureString(label);
+        b.DrawString(
+            Game1.smallFont,
+            label,
+            new Vector2(bounds.Center.X - size.X / 2, bounds.Center.Y - size.Y / 2),
+            enabled ? Game1.textColor : Color.DarkGray
+        );
+    }
+
+    private Rectangle GetRefreshButtonBounds()
+    {
+        int x = this.xPositionOnScreen + Padding + LeftWidth + 28;
+        return new Rectangle(x, this.yPositionOnScreen + this.height - 68, 150, 48);
+    }
+
+    private Rectangle GetTrackButtonBounds()
+    {
+        Rectangle refresh = this.GetRefreshButtonBounds();
+        return new Rectangle(refresh.Right + 16, refresh.Y, 190, refresh.Height);
+    }
+
+    private bool CanTrackSelectedNpc()
+    {
+        return this.selectedNpc is not null
+            && this.response is { Status: QueryStatus.Success };
+    }
+
+    private void SelectNpc(NpcListEntry entry)
+    {
+        this.selectedNpc = entry.InternalName;
+        this.loading = true;
+        this.response = null;
+        this.scheduleOffset = 0;
+        Game1.playSound("smallSelect");
+        this.queryNpc(entry.InternalName);
+    }
+
+    private void ToggleTracking()
+    {
+        if (!this.CanTrackSelectedNpc())
+            return;
+
+        if (this.isTracking(this.selectedNpc!))
+            this.stopTracking();
+        else
+            this.trackNpc(this.selectedNpc!, this.response);
+        Game1.playSound("smallSelect");
+    }
+
+    private void MoveControllerSelection(int delta)
+    {
+        if (this.filteredNpcs.Count == 0)
+            return;
+
+        this.controllerIndex = Math.Clamp(
+            this.controllerIndex < 0 ? 0 : this.controllerIndex + delta,
+            0,
+            this.filteredNpcs.Count - 1
+        );
+        int visibleRows = this.GetVisibleListRows();
+        if (this.controllerIndex < this.listOffset)
+            this.listOffset = this.controllerIndex;
+        else if (this.controllerIndex >= this.listOffset + visibleRows)
+            this.listOffset = this.controllerIndex - visibleRows + 1;
+        Game1.playSound("shiny4");
+    }
+
+    private string ResolveNpcDisplayName(string internalName, string? hostDisplayName)
+    {
+        NPC? localNpc = Game1.getCharacterFromName(internalName);
+        if (localNpc is not null && !string.IsNullOrWhiteSpace(localNpc.displayName))
+            return localNpc.displayName;
+        if (!string.IsNullOrWhiteSpace(hostDisplayName))
+            return hostDisplayName;
+        return internalName;
+    }
 
     private string TranslateStatus(string status)
     {

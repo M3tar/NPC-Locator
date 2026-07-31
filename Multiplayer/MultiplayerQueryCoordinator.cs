@@ -53,6 +53,11 @@ internal sealed class MultiplayerQueryCoordinator
         this.Query(npcName, logToConsole: false);
     }
 
+    public void QueryFromTracker(string npcName)
+    {
+        this.Query(npcName, logToConsole: false);
+    }
+
     private void Query(string npcName, bool logToConsole)
     {
         if (!Context.IsWorldReady)
@@ -240,6 +245,7 @@ internal sealed class MultiplayerQueryCoordinator
             this.SendResponse(e.FromPlayerID, new NpcQueryResponse
             {
                 RequestId = request.RequestId,
+                NpcName = request.NpcName,
                 Status = QueryStatus.HostNotReady,
                 Message = "The host world is not ready."
             });
@@ -253,6 +259,7 @@ internal sealed class MultiplayerQueryCoordinator
             this.SendResponse(e.FromPlayerID, new NpcQueryResponse
             {
                 RequestId = request.RequestId,
+                NpcName = request.NpcName,
                 Status = QueryStatus.HostNotReady,
                 Message = "The requesting player is not fully connected."
             });
@@ -270,6 +277,7 @@ internal sealed class MultiplayerQueryCoordinator
             this.SendResponse(e.FromPlayerID, new NpcQueryResponse
             {
                 RequestId = request.RequestId,
+                NpcName = request.NpcName,
                 Status = QueryStatus.UnsupportedProtocol,
                 Message = $"Host protocol is {Protocol.Version}."
             });
@@ -280,6 +288,7 @@ internal sealed class MultiplayerQueryCoordinator
             this.SendResponse(e.FromPlayerID, new NpcQueryResponse
             {
                 RequestId = request.RequestId,
+                NpcName = request.NpcName,
                 Status = QueryStatus.PermissionDenied,
                 Message = "The host disabled remote NPC queries."
             });
@@ -290,6 +299,7 @@ internal sealed class MultiplayerQueryCoordinator
             this.SendResponse(e.FromPlayerID, new NpcQueryResponse
             {
                 RequestId = request.RequestId,
+                NpcName = request.NpcName,
                 Status = QueryStatus.RateLimited,
                 Message = "Too many NPC queries were sent."
             });
@@ -332,6 +342,13 @@ internal sealed class MultiplayerQueryCoordinator
                 $"NPC response '{response.RequestId}' uses unsupported protocol {response.ProtocolVersion}.",
                 LogLevel.Warn
             );
+            this.ResponseReceived?.Invoke(new NpcQueryResponse
+            {
+                RequestId = response.RequestId,
+                NpcName = pending.NpcName,
+                Status = QueryStatus.UnsupportedProtocol,
+                Message = $"The host response uses protocol {response.ProtocolVersion}."
+            });
             return;
         }
 

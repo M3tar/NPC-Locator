@@ -1,5 +1,6 @@
 using MultiplayerNpcLocator.Config;
 using MultiplayerNpcLocator.Framework;
+using MultiplayerNpcLocator.Integrations;
 using MultiplayerNpcLocator.Multiplayer;
 using MultiplayerNpcLocator.UI;
 using StardewModdingAPI;
@@ -13,6 +14,7 @@ public sealed class ModEntry : Mod
 {
     private ModConfig? config;
     private MultiplayerQueryCoordinator? queryCoordinator;
+    private NpcTrackerOverlay? tracker;
 
     public override void Entry(IModHelper helper)
     {
@@ -25,7 +27,19 @@ public sealed class ModEntry : Mod
         );
         this.queryCoordinator.RegisterEvents();
         this.queryCoordinator.ResponseReceived += this.OnQueryResponse;
+        this.tracker = new NpcTrackerOverlay(
+            this.config,
+            helper.Translation,
+            npcName => this.queryCoordinator?.QueryFromTracker(npcName)
+        );
         helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+        helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+        helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
+        helper.Events.GameLoop.DayStarted += this.OnDayStarted;
+        helper.Events.GameLoop.ReturnedToTitle += this.OnReturnedToTitle;
+        helper.Events.Player.Warped += this.OnWarped;
+        helper.Events.Display.RenderedHud += this.OnRenderedHud;
+        helper.Events.Multiplayer.PeerDisconnected += this.OnPeerDisconnected;
 
         helper.ConsoleCommands.Add(
             "mnl_validate",
@@ -48,6 +62,133 @@ public sealed class ModEntry : Mod
     {
         string npcName = args.Length > 0 ? string.Join(" ", args) : "Pam";
         ApiValidationService.Run(this.Monitor, npcName);
+    }
+
+    private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
+    {
+        IGenericModConfigMenuApi? api = this.Helper.ModRegistry
+            .GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+        if (api is null || this.config is null)
+            return;
+
+        api.Register(this.ModManifest, this.ResetConfig, () => this.Helper.WriteConfig(this.config));
+
+        api.AddSectionTitle(this.ModManifest, () => this.Helper.Translation.Get("config.section.general"));
+        api.AddKeybindList(
+            this.ModManifest,
+            () => this.config.OpenMenuKey,
+            value => this.config.OpenMenuKey = value,
+            () => this.Helper.Translation.Get("config.open-menu-key.name"),
+            () => this.Helper.Translation.Get("config.open-menu-key.tooltip"),
+            fieldId: nameof(ModConfig.OpenMenuKey)
+        );
+
+        api.AddSectionTitle(this.ModManifest, () => this.Helper.Translation.Get("config.section.tracker"));
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShowTrackerOverlay,
+            value => this.config.ShowTrackerOverlay = value,
+            () => this.Helper.Translation.Get("config.show-tracker.name"),
+            fieldId: nameof(ModConfig.ShowTrackerOverlay)
+        );
+        api.AddTextOption(
+            this.ModManifest,
+            () => this.config.TrackerPosition,
+            value => this.config.TrackerPosition = value,
+            () => this.Helper.Translation.Get("config.tracker-position.name"),
+            allowedValues: new[] { "TopLeft", "TopRight", "BottomLeft", "BottomRight" },
+            formatAllowedValue: value => this.Helper.Translation.Get($"config.position.{value}"),
+            fieldId: nameof(ModConfig.TrackerPosition)
+        );
+        api.AddNumberOption(
+            this.ModManifest,
+            () => this.config.TrackerOpacityPercent,
+            value => this.config.TrackerOpacityPercent = value,
+            () => this.Helper.Translation.Get("config.tracker-opacity.name"),
+            min: 35,
+            max: 100,
+            interval: 5,
+            formatValue: value => $"{value}%",
+            fieldId: nameof(ModConfig.TrackerOpacityPercent)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShowNextStop,
+            value => this.config.ShowNextStop = value,
+            () => this.Helper.Translation.Get("config.show-next-stop.name"),
+            fieldId: nameof(ModConfig.ShowNextStop)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShowDirectionAndDistance,
+            value => this.config.ShowDirectionAndDistance = value,
+            () => this.Helper.Translation.Get("config.show-direction.name"),
+            fieldId: nameof(ModConfig.ShowDirectionAndDistance)
+        );
+
+        api.AddSectionTitle(
+            this.ModManifest,
+            () => this.Helper.Translation.Get("config.section.host"),
+            () => this.Helper.Translation.Get("config.section.host.tooltip")
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.AllowRemoteQueries,
+            value => this.config.AllowRemoteQueries = value,
+            () => this.Helper.Translation.Get("config.allow-remote.name"),
+            fieldId: nameof(ModConfig.AllowRemoteQueries)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShareCurrentLocation,
+            value => this.config.ShareCurrentLocation = value,
+            () => this.Helper.Translation.Get("config.share-location.name"),
+            fieldId: nameof(ModConfig.ShareCurrentLocation)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShareDailySchedule,
+            value => this.config.ShareDailySchedule = value,
+            () => this.Helper.Translation.Get("config.share-schedule.name"),
+            fieldId: nameof(ModConfig.ShareDailySchedule)
+        );
+        api.AddBoolOption(
+            this.ModManifest,
+            () => this.config.ShowHostNotifications,
+            value => this.config.ShowHostNotifications = value,
+            () => this.Helper.Translation.Get("config.host-notifications.name"),
+            fieldId: nameof(ModConfig.ShowHostNotifications)
+        );
+        api.AddNumberOption(
+            this.ModManifest,
+            () => this.config.MaxRequestsPerSecond,
+            value => this.config.MaxRequestsPerSecond = value,
+            () => this.Helper.Translation.Get("config.max-requests.name"),
+            () => this.Helper.Translation.Get("config.max-requests.tooltip"),
+            min: 1,
+            max: 10,
+            interval: 1,
+            fieldId: nameof(ModConfig.MaxRequestsPerSecond)
+        );
+    }
+
+    private void ResetConfig()
+    {
+        if (this.config is null)
+            return;
+
+        ModConfig defaults = new();
+        this.config.OpenMenuKey = defaults.OpenMenuKey;
+        this.config.ShowTrackerOverlay = defaults.ShowTrackerOverlay;
+        this.config.TrackerPosition = defaults.TrackerPosition;
+        this.config.TrackerOpacityPercent = defaults.TrackerOpacityPercent;
+        this.config.ShowNextStop = defaults.ShowNextStop;
+        this.config.ShowDirectionAndDistance = defaults.ShowDirectionAndDistance;
+        this.config.AllowRemoteQueries = defaults.AllowRemoteQueries;
+        this.config.ShareCurrentLocation = defaults.ShareCurrentLocation;
+        this.config.ShareDailySchedule = defaults.ShareDailySchedule;
+        this.config.ShowHostNotifications = defaults.ShowHostNotifications;
+        this.config.MaxRequestsPerSecond = defaults.MaxRequestsPerSecond;
     }
 
     private void OnQueryCommand(string command, string[] args)
@@ -82,14 +223,56 @@ public sealed class ModEntry : Mod
         Game1.activeClickableMenu = new NpcSearchMenu(
             npcs,
             this.Helper.Translation,
-            npcName => this.queryCoordinator?.QueryFromMenu(npcName)
+            npcName => this.queryCoordinator?.QueryFromMenu(npcName),
+            this.OnTrackNpc,
+            () => this.tracker?.Stop(),
+            npcName => this.tracker?.IsTracking(npcName) == true
         );
     }
 
     private void OnQueryResponse(NpcQueryResponse response)
     {
+        this.tracker?.SetResponse(response);
         if (Game1.activeClickableMenu is NpcSearchMenu menu)
             menu.SetResponse(response);
+    }
+
+    private void OnTrackNpc(string npcName, NpcQueryResponse? response)
+    {
+        this.tracker?.Track(npcName, response);
+    }
+
+    private void OnTimeChanged(object? sender, TimeChangedEventArgs e)
+    {
+        this.tracker?.Refresh();
+    }
+
+    private void OnDayStarted(object? sender, DayStartedEventArgs e)
+    {
+        this.tracker?.Refresh();
+    }
+
+    private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs e)
+    {
+        this.tracker?.Stop();
+    }
+
+    private void OnWarped(object? sender, WarpedEventArgs e)
+    {
+        if (e.Player.UniqueMultiplayerID == Game1.player.UniqueMultiplayerID)
+            this.tracker?.Refresh();
+    }
+
+    private void OnRenderedHud(object? sender, RenderedHudEventArgs e)
+    {
+        if (Context.IsWorldReady && Game1.activeClickableMenu is null)
+            this.tracker?.Draw(e.SpriteBatch);
+    }
+
+    private void OnPeerDisconnected(object? sender, PeerDisconnectedEventArgs e)
+    {
+        if (e.Peer.IsHost)
+            this.tracker?.Stop();
     }
 
     private List<NpcListEntry> GetNpcList()

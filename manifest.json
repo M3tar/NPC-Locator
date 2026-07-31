@@ -5,5 +5,11 @@
   "Description": "Queries host-authoritative NPC locations and daily schedules in multiplayer.",
   "UniqueID": "Mercury.MultiplayerNpcLocator",
   "EntryDll": "MultiplayerNpcLocator.dll",
-  "MinimumApiVersion": "4.5.2"
+  "MinimumApiVersion": "4.5.2",
+  "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
 }

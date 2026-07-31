@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-- 阶段：阶段 1 主机权威查询闭环已通过；阶段 2 F3 查询窗口已完成单人及非主机核心验证，正在收尾。
+- 阶段：阶段 2 查询窗口已通过核心验证；阶段 3 地点本地化、GMCM 与单 NPC 追踪栏已编码，等待 Windows 联机验证。
 - 计划版本：0.1.0 私人内测版。
 - 目标环境：Stardew Valley 1.6.15+、SMAPI 4.5.2、Windows 11。
 - 唯一 ID：`Mercury.MultiplayerNpcLocator`。
@@ -16,3 +16,4 @@
 - `docs/DEVELOPMENT_PLAN.md`：完整开发计划与验收标准。
 - `docs/DECISIONS.md`：已确认设计决策及后续变更记录。
 - `docs/STATUS.md`：当前进度、阻塞项与下一步。
+- `docs/PHASE3_VALIDATION.md`：当前 Windows 构建与游戏内验证步骤。
