@@ -76,7 +76,7 @@
 
 ## 已确认决策
 
-- 作者 Mercury；名称 `NPC Locator` / “NPC 定位器”；UniqueID `Mercury.NpcLocator`；首版 `0.1.0` 正式发布。
+- 公开作者 March3tar；名称 `NPC Locator` / “NPC 定位器”；UniqueID 保持 `Mercury.NpcLocator`；既有 Git 作者 Mercury 不重写；首版 `0.1.0` 正式发布。
 - 独立于 Lookup Anything，不引用、修改或硬依赖它。
 - 单人、主机、农场助手均可 F3 主动查询；农场助手远程数据来自主机。
 - 默认 F3，可通过 GMCM / `config.json` 改键；不尝试自动解决全局快捷键冲突。

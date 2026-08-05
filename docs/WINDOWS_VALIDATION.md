@@ -60,7 +60,7 @@ bin\Release\net6.0\NpcLocator.dll
 ## 三、确认 Mod 加载
 
 1. 通过 SMAPI 启动游戏。
-2. 启动日志的 Mod 列表中应出现 `NPC Locator 0.1.0 by Mercury`。
+2. 启动日志的 Mod 列表中应出现 `NPC Locator 0.1.0 by March3tar`。
 3. 不应出现红色的本 Mod 加载或编译错误。
 4. 载入一个普通存档；本轮验证可先在单人模式完成。
 

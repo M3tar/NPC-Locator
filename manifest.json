@@ -1,6 +1,6 @@
 {
   "Name": "NPC Locator",
-  "Author": "Mercury",
+  "Author": "March3tar",
   "Version": "0.1.0",
   "Description": "Finds and tracks NPC locations, schedules, and delivery quest targets in solo and multiplayer games.",
   "UniqueID": "Mercury.NpcLocator",
