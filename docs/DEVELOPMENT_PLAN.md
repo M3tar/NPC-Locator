@@ -617,7 +617,7 @@ GMCM 中将按“客户端功能”“追踪显示”“主机共享”分组。
 
 ## 18. 项目追踪约定
 
-- 项目根目录：`repository root`。
+- 项目根目录：当前仓库根目录。
 - `docs/DEVELOPMENT_PLAN.md` 是开发范围与验收标准的主文档。
 - `docs/DECISIONS.md` 记录所有已经确认或后来变更的设计决策。
 - `docs/STATUS.md` 记录当前阶段、完成项、阻塞项和下一步。

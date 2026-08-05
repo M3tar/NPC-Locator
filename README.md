@@ -6,6 +6,8 @@
 
 [简体中文](README.zh-CN.md)
 
+> **Download:** [NPC Locator on Nexus Mods — Mod #50217](https://www.nexusmods.com/stardewvalley/mods/50217)
+
 NPC Locator is a SMAPI mod for Stardew Valley by March3tar. It shows where an NPC is now, where their standard daily schedule takes them next, and how far away they are when you share a map. It works for solo players, multiplayer hosts, and farmhands.
 
 The mod began as a solution for farmhands who couldn't reliably look up NPCs in multiplayer. It has since grown into a focused locator for everyday visits and item-delivery quests—without teleporting anyone, changing schedules, or writing tracking data to the save.
