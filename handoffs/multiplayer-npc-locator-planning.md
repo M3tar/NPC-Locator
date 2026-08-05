@@ -1,11 +1,11 @@
-# 任务交接：NPC 定位器 0.1.0 候选版验收
+# 任务交接：NPC 定位器 0.1.0 正式发布
 
 生成时间：2026-08-01 01:42:54 CST（Asia/Shanghai，UTC+08:00）
 项目：NPC Locator（NPC 定位器；原名 Multiplayer NPC Locator / 联机 NPC 定位器）
 任务标识：`multiplayer-npc-locator-planning`
-状态：进行中（阶段 5 最终验收）
+状态：进行中（Nexus Mods 正式发布准备）
 源分支：`main`
-源提交：`9f7efc5212e37de325a2c46c50bc45fc2f35d181`
+源提交基线：`7e6251ac2f31a68d49802a62cacf2f13253ba2ee`
 
 ## 任务概述
 
@@ -47,7 +47,11 @@
 - rc11 将 rc10 的原生菜单面板提取为追踪栏与右下角任务提示共用组件；任务提示保持不透明，追踪与忽略按钮改用有主次关系的棕金色阶；当前候选源码包为 `dist/NpcLocator-0.1.0-rc11-source.zip`。
 - rc11 源码包 SHA-256：`3eec63c9cfc79f8587ccbde21b33b32646c9ebf0f119e70a9c20d437a46d7212`。
 - `phase4f-source.zip` 与 rc1 的游戏功能代码基本相同；rc2 统一产品技术标识，rc3 加入追踪栏右上角 `×`，rc4 修复首轮反馈，rc5 修复长地点名溢出，rc6 加入中文拼音排序，rc7 采用三列追踪布局，rc8 统一信息行并收窄卡片，rc9 尝试信纸背景，rc10 改为原生菜单混合背景，rc11 统一任务提示。后续只使用 rc11。
-- 当前 Mac 没有 `dotnet`、PowerShell、Stardew Valley 或 SMAPI 程序集，因此新增 `-Package` 流程尚未实际执行；需在 Windows 完成首次运行。
+- 当前 Mac 没有 `dotnet`、PowerShell、Stardew Valley 或 SMAPI 程序集；构建与实机验证已在 Windows 完成，后续 manifest 变更仍需回到 Windows 重新打包。
+- rc11 已在 Windows 构建并完成用户实机验证，用户确认未发现问题；回传最终候选 ZIP 的 SHA-256 为 `6d4432eb2be58d3e778a007923510bbc7ec95228cdefb590ac02005699a05d8d`。
+- 用户确认 0.1.0 作为正式 Release，不使用 Beta 状态。
+- Nexus Mods 未发布草稿已创建：`https://www.nexusmods.com/stardewvalley/mods/50217`；基本资料已保存，尚未上传媒体或文件，也未公开发布。
+- manifest 已加入 `Nexus:50217`，因此此前通过实机验证的 ZIP 不能作为最终上传包，需要从最新源码重新构建。
 
 ## 已完成工作
 
@@ -72,7 +76,7 @@
 
 ## 已确认决策
 
-- 作者 Mercury；名称 `NPC Locator` / “NPC 定位器”；UniqueID `Mercury.NpcLocator`；首版 `0.1.0` 私人内测。
+- 作者 Mercury；名称 `NPC Locator` / “NPC 定位器”；UniqueID `Mercury.NpcLocator`；首版 `0.1.0` 正式发布。
 - 独立于 Lookup Anything，不引用、修改或硬依赖它。
 - 单人、主机、农场助手均可 F3 主动查询；农场助手远程数据来自主机。
 - 默认 F3，可通过 GMCM / `config.json` 改键；不尝试自动解决全局快捷键冲突。
@@ -109,7 +113,7 @@
 
 ## 下一步
 
-1. 在 Windows 解压 `NpcLocator-0.1.0-rc11-source.zip`；若旧的 `Mods\MultiplayerNpcLocator` 测试目录仍存在，先手动删除。
+1. 将包含 `Nexus:50217` 的最新源码传到 Windows；若旧的 `Mods\MultiplayerNpcLocator` 测试目录仍存在，先手动删除。
 2. 在源码目录运行：
 
    ```powershell
@@ -117,10 +121,10 @@
    ```
 
    若非默认 Steam 库，追加 `-GamePath 'D:\SteamLibrary\steamapps\common\Stardew Valley'`。
-3. 核对首次 `-Package` 执行：Release 编译成功，安装目录安全更新，并生成 `dist\NpcLocator-0.1.0.zip` 与 SHA-256。如编译/打包失败，先根据完整 PowerShell 输出修复，不跳过验证。
-4. 主机和农场助手使用同一个二进制包，按 `docs/PHASE5_VALIDATION.md` 完成最终联机、安装组合、共享权限、断线、UI/游戏边界与卸载测试。
-5. 收集最终二进制包 SHA-256 以及主机/农场助手 SMAPI 日志。全部通过后，更新 `docs/STATUS.md`，标记 0.1.0 私人内测候选版完成。
-6. 如需要跨设备通过 Git 继续，先提交本 handoff，再配置 remote 并 push；另一设备 pull 后再核对分支与提交。`dist` 候选 zip 需单独传输或在目标设备从 commit 重新生成。
+3. 核对 Release 编译成功，并生成新的 `dist\NpcLocator-0.1.0.zip` 与 SHA-256；确认包内 manifest 含 `Nexus:50217`。
+4. 因功能代码未变，执行一次 SMAPI 启动冒烟，确认新包正常加载且无本 Mod 未处理错误。
+5. 在 Nexus 草稿上传展示图和新的最终 ZIP；Requirements、Permissions 与 Donation Points 由用户确认，不能代为猜测。
+6. 用户检查预览并明确确认后才点击 Publish；在此之前保持草稿未发布。
 
 ## 相关文件与资料
 

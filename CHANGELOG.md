@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 - Private beta candidate
+## 0.1.0 - Release
 
 - Renamed the mod from Multiplayer NPC Locator to NPC Locator to reflect full solo, host, and farmhand support.
 - Added host-authoritative NPC location and standard daily schedule queries for solo players, hosts, and farmhands.

@@ -11,7 +11,7 @@
 - Tile coordinates are map-local. A next-stop coordinate is the schedule target, while the current coordinate is the NPC's live tile; neither is a route or arrival guarantee.
 - Same-map direction and distance are approximate straight-line guidance, not pathfinding. The mod doesn't account for walls, doors, warps, or inaccessible areas.
 - SMAPI can't reliably detect every key conflict. Change the default F3 binding through GMCM or `config.json` when needed.
-- The 0.1.0 private beta is validated primarily on Windows, Stardew Valley 1.6.15, and SMAPI 4.5.2. Newer game or SMAPI versions need regression testing.
+- Version 0.1.0 is validated primarily on Windows, Stardew Valley 1.6.15, and SMAPI 4.5.2. Newer game or SMAPI versions need regression testing.
 
 ## 简体中文
 
@@ -24,4 +24,4 @@
 - 格子坐标仅对当前地图有意义。“下一站”坐标是日程目标，“当前位置”坐标是 NPC 实时格子；两者都不是路线或到达保证。
 - 同地图方向与距离是直线估算，不是寻路，不考虑墙壁、门、传送点或不可到达区域。
 - SMAPI 无法可靠检测所有快捷键冲突。如有需要，通过 GMCM 或 `config.json` 修改默认 F3。
-- 0.1.0 私人内测主要验证环境为 Windows、Stardew Valley 1.6.15 和 SMAPI 4.5.2。更新的游戏或 SMAPI 版本需要回归测试。
+- 0.1.0 主要验证环境为 Windows、Stardew Valley 1.6.15 和 SMAPI 4.5.2。更新的游戏或 SMAPI 版本需要回归测试。

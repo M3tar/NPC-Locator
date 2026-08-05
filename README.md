@@ -70,7 +70,7 @@ These screenshots come from real testing: the spring captures are from a solo sa
 
 - Stardew Valley 1.6.15 or later in the 1.6 line;
 - SMAPI 4.5.2 or later;
-- Windows is the tested platform for the 0.1.0 private beta;
+- Windows is the tested platform for version 0.1.0;
 - Generic Mod Config Menu (GMCM) is optional.
 
 For a farmhand to locate NPCs on remote maps, both the host and that farmhand must install the same compatible version. Solo players and hosts read their local world directly.

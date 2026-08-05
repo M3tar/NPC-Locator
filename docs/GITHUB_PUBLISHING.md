@@ -16,7 +16,7 @@ Find and track Stardew Valley NPC locations, daily schedules, and delivery quest
 
 ### Title
 
-NPC Locator 0.1.0 — Private beta
+NPC Locator 0.1.0
 
 ### Body
 
@@ -43,7 +43,7 @@ Farmhands need the host to install the same compatible version before the mod ca
 
 If you used a pre-release folder named `MultiplayerNpcLocator`, back up its `config.json` if needed and remove that old folder before installing this release. Don't keep both versions installed.
 
-### Private-beta boundaries
+### Current limitations
 
 - The tested environment is Windows, Stardew Valley 1.6.15, and SMAPI 4.5.2.
 - Version 0.1.0 recognizes standard item-delivery quests only.
@@ -59,7 +59,7 @@ See the repository README and [complete known limitations](KNOWN_LIMITATIONS.md)
 
 ### 标题
 
-NPC 定位器 0.1.0 — 私人测试版
+NPC 定位器 0.1.0
 
 ### 正文
 
@@ -86,7 +86,7 @@ NPC 定位器 0.1.0 — 私人测试版
 
 如果使用过名为 `MultiplayerNpcLocator` 的更名前测试版，可先备份其中的 `config.json`，再删除旧文件夹并安装此版本。请勿同时保留两个版本。
 
-### 私人测试版边界
+### 当前限制
 
 - 已验证环境为 Windows、Stardew Valley 1.6.15 和 SMAPI 4.5.2；
 - 0.1.0 仅识别标准物品交付任务；
