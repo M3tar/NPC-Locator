@@ -52,6 +52,9 @@
 - 用户确认 0.1.0 作为正式 Release，不使用 Beta 状态。
 - Nexus Mods 未发布草稿已创建：`https://www.nexusmods.com/stardewvalley/mods/50217`；基本资料已保存，尚未上传媒体或文件，也未公开发布。
 - manifest 已加入 `Nexus:50217`，因此此前通过实机验证的 ZIP 不能作为最终上传包，需要从最新源码重新构建。
+- 最终 Nexus 包已在 Mac 上使用原验证 DLL 与最新 manifest/文档重新封装，ZIP SHA-256 为 `ed899a6fae6e3983b43544e9fd1f770c02ed4dbbb6260cf219d8df9c9b83e125`，DLL SHA-256 保持 `5a7b2f102f4872b49ecba17feea813ea336d39bed589e03d95f0d4df774de083`。
+- 用户已用最终 Nexus 包在 Windows 11 / Stardew Valley 1.6.15 / SMAPI 4.5.2 完成启动冒烟；日志确认 `NPC Locator 0.1.0 by March3tar`、UniqueID、GMCM API 和简体中文单人存档加载正常，退出干净，无本 Mod 异常。
+- 更新检查提示 `Found no Nexus mod with this ID` 是 Mod ID `50217` 尚处于未发布草稿时的预期现象，发布后复核即可。
 
 ## 已完成工作
 
@@ -113,18 +116,10 @@
 
 ## 下一步
 
-1. 将包含 `Nexus:50217` 的最新源码传到 Windows；若旧的 `Mods\MultiplayerNpcLocator` 测试目录仍存在，先手动删除。
-2. 在源码目录运行：
-
-   ```powershell
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build-Windows.ps1 -Install -UpdateExisting -Package
-   ```
-
-   若非默认 Steam 库，追加 `-GamePath 'D:\SteamLibrary\steamapps\common\Stardew Valley'`。
-3. 核对 Release 编译成功，并生成新的 `dist\NpcLocator-0.1.0.zip` 与 SHA-256；确认包内 manifest 含 `Nexus:50217`。
-4. 因功能代码未变，执行一次 SMAPI 启动冒烟，确认新包正常加载且无本 Mod 未处理错误。
-5. 在 Nexus 草稿上传展示图和新的最终 ZIP；Requirements、Permissions 与 Donation Points 由用户确认，不能代为猜测。
-6. 用户检查预览并明确确认后才点击 Publish；在此之前保持草稿未发布。
+1. 在 Nexus 草稿上传展示图和已验证的最终 ZIP；填写文件名、版本与变更说明。
+2. 核对 Requirements 与 Permissions；Donation Points 和授权选择由用户确认，不能代为猜测。
+3. 用户检查预览并明确确认后才点击 Publish；在此之前保持草稿未发布。
+4. 发布后启动一次 SMAPI，复核 `Nexus:50217` 更新检查不再报告草稿不存在。
 
 ## 相关文件与资料
 

@@ -128,16 +128,18 @@
 - Nexus Mods 已创建未发布草稿 `50217`，并保存名称、版本、简介、完整说明与标签；未上传文件、未公开发布。
 - `manifest.json` 已加入 `Nexus:50217` 更新键，发布文案已从私人测试候选调整为正式版措辞。
 - 面向玩家的作者名称已统一为 Nexus 账号 `March3tar`；稳定技术标识仍为 `Mercury.NpcLocator`，既有 Git 历史不重写。
+- 最终 Nexus 上传包 `dist/nexus-final/NpcLocator-0.1.0.zip` 保留已验证 DLL，并换入正式版 manifest 与文档；ZIP SHA-256 为 `ed899a6fae6e3983b43544e9fd1f770c02ed4dbbb6260cf219d8df9c9b83e125`，DLL SHA-256 与原 Windows 候选一致，为 `5a7b2f102f4872b49ecba17feea813ea336d39bed589e03d95f0d4df774de083`。
+- 用户已在 Windows 11 / Stardew Valley 1.6.15 / SMAPI 4.5.2 使用最终 Nexus 包完成启动冒烟。日志确认 `NPC Locator 0.1.0 by March3tar`、`Mercury.NpcLocator` 和 GMCM API 正常加载，简体中文单人存档正常进入并干净退出，没有本 Mod 警告、异常或未处理错误。
+- SMAPI 更新检查暂时报告 `NPC Locator: Found no Nexus mod with this ID.`；这是 `Nexus:50217` 草稿尚未公开时的预期结果，发布后再复核更新检查即可，不需要移除 UpdateKey。
 
 ## 下一步
 
 完成 0.1.0 正式发布资料。
 
-1. 在 Windows 用包含 `Nexus:50217` 和正式版文案的最新源码重新运行 `scripts/Build-Windows.ps1 -Package`。
-2. 核对新 ZIP 的 manifest、归档结构和 SHA-256；如代码未变，只需做一次启动冒烟确认 SMAPI 正常加载。
-3. 为 Nexus 草稿上传至少一张展示图，并上传新的最终 ZIP，填写文件名与版本说明。
-4. 核对 Requirements 与 Permissions；涉及授权和 Donation Points 的选择由用户确认。
-5. 用户检查草稿预览并明确确认后，才公开发布。
+1. 为 Nexus 草稿上传至少一张展示图，并上传已验证的最终 ZIP，填写文件名与版本说明。
+2. 核对 Requirements 与 Permissions；涉及授权和 Donation Points 的选择由用户确认。
+3. 用户检查草稿预览并明确确认后，才公开发布。
+4. 发布后复核 SMAPI 可通过 `Nexus:50217` 完成更新检查。
 
 ## 当前阻塞项
 
