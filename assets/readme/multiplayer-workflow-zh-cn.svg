@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">NPC 定位器在单人和联机游戏中的工作方式</title>
+  <desc id="desc">单人玩家读取本地世界，主机读取权威主机世界，农场助手向主机发送经过验证的 NPC 查询，并且只接收主机允许共享的位置和日程结果。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#a95d32"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="560" rx="28" fill="#f7e6bf"/>
+  <rect x="12" y="12" width="1176" height="536" rx="22" fill="none" stroke="#bc7742" stroke-width="2"/>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif">
+    <text x="60" y="74" fill="#3b281d" font-size="42" font-weight="800">一个定位器，三种游戏身份</text>
+    <text x="60" y="110" fill="#80674d" font-size="21">每次 NPC 查询都由最近的权威世界数据回答。</text>
+
+    <g id="solo" transform="translate(60 150)">
+      <rect width="318" height="270" rx="18" fill="#fff7df" stroke="#d2aa70" stroke-width="3"/>
+      <circle cx="46" cy="48" r="20" fill="#5f7d46"/>
+      <text x="82" y="57" fill="#3b281d" font-size="27" font-weight="800">单人玩家</text>
+      <line x1="46" y1="94" x2="46" y2="211" stroke="#a95d32" stroke-width="4" marker-end="url(#arrow)"/>
+      <rect x="86" y="86" width="190" height="62" rx="12" fill="#f1d59d"/>
+      <text x="181" y="112" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">按 F3</text>
+      <text x="181" y="138" text-anchor="middle" fill="#3b281d" font-size="20">选择 NPC</text>
+      <rect x="86" y="178" width="190" height="62" rx="12" fill="#ead09b" stroke="#b9743e" stroke-width="2"/>
+      <text x="181" y="204" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">本地世界</text>
+      <text x="181" y="230" text-anchor="middle" fill="#3b281d" font-size="20">直接读取</text>
+      <text x="159" y="258" text-anchor="middle" fill="#6f573f" font-size="18">不发送网络请求</text>
+    </g>
+
+    <g id="host" transform="translate(441 150)">
+      <rect width="318" height="270" rx="18" fill="#fff7df" stroke="#b9743e" stroke-width="4"/>
+      <circle cx="46" cy="48" r="20" fill="#b45c2e"/>
+      <text x="82" y="57" fill="#3b281d" font-size="27" font-weight="800">主机</text>
+      <line x1="46" y1="94" x2="46" y2="211" stroke="#a95d32" stroke-width="4" marker-end="url(#arrow)"/>
+      <rect x="86" y="86" width="190" height="62" rx="12" fill="#f1d59d"/>
+      <text x="181" y="112" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">本地查询</text>
+      <text x="181" y="138" text-anchor="middle" fill="#3b281d" font-size="20">直接使用定位器</text>
+      <rect x="86" y="178" width="190" height="62" rx="12" fill="#eac487" stroke="#a95d32" stroke-width="2"/>
+      <text x="181" y="204" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">主机世界</text>
+      <text x="181" y="230" text-anchor="middle" fill="#3b281d" font-size="20">权威世界数据</text>
+      <text x="159" y="258" text-anchor="middle" fill="#6f573f" font-size="18">响应主机允许的查询</text>
+    </g>
+
+    <g id="farmhand" transform="translate(822 150)">
+      <rect width="318" height="270" rx="18" fill="#fff7df" stroke="#d2aa70" stroke-width="3"/>
+      <circle cx="46" cy="48" r="20" fill="#d89a3c"/>
+      <text x="82" y="57" fill="#3b281d" font-size="27" font-weight="800">农场助手</text>
+      <line x1="46" y1="94" x2="46" y2="211" stroke="#a95d32" stroke-width="4" marker-end="url(#arrow)"/>
+      <rect x="86" y="86" width="190" height="62" rx="12" fill="#f1d59d"/>
+      <text x="181" y="112" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">远端地图</text>
+      <text x="181" y="138" text-anchor="middle" fill="#3b281d" font-size="20">发送名称与选项</text>
+      <rect x="86" y="178" width="190" height="62" rx="12" fill="#ead09b" stroke="#b9743e" stroke-width="2"/>
+      <text x="181" y="204" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">允许共享的结果</text>
+      <text x="181" y="230" text-anchor="middle" fill="#3b281d" font-size="20">实时地点与日程</text>
+      <text x="159" y="258" text-anchor="middle" fill="#6f573f" font-size="18">在客户端持续追踪</text>
+    </g>
+
+    <path d="M846 313C797 313 795 287 758 287" fill="none" stroke="#a95d32" stroke-width="4" marker-end="url(#arrow)"/>
+    <path d="M758 357C797 357 801 383 846 383" fill="none" stroke="#5f7d46" stroke-width="4" marker-end="url(#arrow)"/>
+
+    <g transform="translate(60 461)">
+      <rect width="1080" height="54" rx="12" fill="#3b281d"/>
+      <circle cx="28" cy="27" r="9" fill="#e0a03f"/>
+      <text x="52" y="34" fill="#fff1cf" font-size="20">送货任务只保留在每名玩家自己的任务日志中，绝不会发送给主机。</text>
+    </g>
+  </g>
+</svg>

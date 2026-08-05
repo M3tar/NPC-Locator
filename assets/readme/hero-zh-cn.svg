@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="390" viewBox="0 0 1200 390" role="img" aria-labelledby="title desc">
+  <title id="title">NPC 定位器</title>
+  <desc id="desc">一款适用于单人和联机游戏的《星露谷物语》SMAPI Mod，用于查找并追踪 NPC 位置、日程和送货任务目标。</desc>
+  <defs>
+    <pattern id="field-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#6d4a32" stroke-width="1" opacity="0.22"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="390" rx="28" fill="#2b1d16"/>
+  <rect x="12" y="12" width="1176" height="366" rx="22" fill="url(#field-grid)" stroke="#8d6544" stroke-width="2"/>
+
+  <g id="title-block" transform="translate(62 52)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif">
+    <text x="0" y="0" fill="#e2a348" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', monospace" font-size="18" font-weight="700" letter-spacing="2">SMAPI MOD · 星露谷物语 1.6</text>
+    <text x="0" y="78" fill="#fff3d3" font-size="64" font-weight="800" letter-spacing="-1">NPC 定位器</text>
+    <text x="2" y="128" fill="#d8c09b" font-size="27">找到村民，查看下一站，</text>
+    <text x="2" y="166" fill="#d8c09b" font-size="27">继续你的行程。</text>
+
+    <g transform="translate(0 213)" font-size="19" font-weight="700">
+      <rect width="128" height="42" rx="10" fill="#f0d29b"/>
+      <text x="64" y="28" text-anchor="middle" fill="#3b281d">单人</text>
+      <rect x="140" width="128" height="42" rx="10" fill="#f0d29b"/>
+      <text x="204" y="28" text-anchor="middle" fill="#3b281d">主机</text>
+      <rect x="280" width="164" height="42" rx="10" fill="#f0d29b"/>
+      <text x="362" y="28" text-anchor="middle" fill="#3b281d">农场助手</text>
+    </g>
+    <text x="2" y="302" fill="#aa9172" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', monospace" font-size="18">实时地点 · 每日日程 · 任务目标</text>
+  </g>
+
+  <g id="locator-map" transform="translate(665 40)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="475" height="310" rx="22" fill="#f5deb0" stroke="#bd7438" stroke-width="5"/>
+    <path d="M41 233C111 151 159 229 221 143S339 85 427 70" fill="none" stroke="#a95d32" stroke-width="5" stroke-linecap="round" stroke-dasharray="4 13"/>
+
+    <g transform="translate(36 222)">
+      <circle cx="0" cy="0" r="18" fill="#5f7d46" stroke="#3c512f" stroke-width="4"/>
+      <circle cx="0" cy="0" r="5" fill="#f8e5b8"/>
+    </g>
+    <g transform="translate(225 140)">
+      <path d="M0-26C17-26 29-14 29 1C29 20 0 50 0 50S-29 20-29 1C-29-14-17-26 0-26Z" fill="#b45c2e" stroke="#743719" stroke-width="4"/>
+      <circle cx="0" cy="0" r="9" fill="#f8e5b8"/>
+      <text x="0" y="79" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">当前位置</text>
+    </g>
+    <g transform="translate(427 69)">
+      <path d="M0-22L7-7L23-5L11 6L14 22L0 14L-14 22L-11 6L-23-5L-7-7Z" fill="#dfa03c" stroke="#8b5925" stroke-width="4"/>
+      <text x="0" y="52" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">下一站</text>
+    </g>
+
+    <g transform="translate(39 26)">
+      <rect x="0" y="0" width="257" height="82" rx="12" fill="#fff4d5" stroke="#d0a264" stroke-width="2"/>
+      <text x="18" y="30" fill="#80674d" font-size="17" font-weight="700">正在追踪</text>
+      <text x="18" y="62" fill="#3b281d" font-size="24" font-weight="800">阿比盖尔</text>
+      <text x="238" y="52" text-anchor="end" fill="#a95d32" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">14,5</text>
+    </g>
+
+    <g transform="translate(40 287)" font-size="18" font-weight="700">
+      <text x="0" y="0" fill="#80674d">当前</text>
+      <text x="52" y="0" fill="#3b281d">鹈鹕镇</text>
+      <text x="166" y="0" fill="#80674d">下一站</text>
+      <text x="239" y="0" fill="#3b281d">星之果实餐吧 · 13:00</text>
+    </g>
+  </g>
+</svg>
