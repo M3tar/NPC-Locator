@@ -1,12 +1,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerNpcLocator.Config;
-using MultiplayerNpcLocator.Framework;
+using NpcLocator.Config;
+using NpcLocator.Framework;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
 
-namespace MultiplayerNpcLocator.UI;
+namespace NpcLocator.UI;
 
 /// <summary>Shows one non-blocking local quest prompt and tracks the user's decision.</summary>
 internal sealed class QuestPromptOverlay
@@ -143,7 +143,7 @@ internal sealed class QuestPromptOverlay
 
         DeliveryQuestSnapshot quest = this.prompt!;
         Rectangle bounds = this.GetBounds();
-        IClickableMenu.drawTextureBox(b, bounds.X, bounds.Y, bounds.Width, bounds.Height, Color.White);
+        NativeMenuPanel.Draw(b, bounds);
 
         int x = bounds.X + 24;
         int y = bounds.Y + 18;
@@ -172,8 +172,8 @@ internal sealed class QuestPromptOverlay
             status += "  " + this.i18n.Get("quest.prompt.days-left", new { days });
         b.DrawString(Game1.smallFont, status, new Vector2(x, y), Game1.textColor);
 
-        this.DrawButton(b, this.GetTrackBounds(), this.i18n.Get("quest.prompt.track"));
-        this.DrawButton(b, this.GetIgnoreBounds(), this.i18n.Get("quest.prompt.ignore"));
+        this.DrawButton(b, this.GetTrackBounds(), this.i18n.Get("quest.prompt.track"), primary: true);
+        this.DrawButton(b, this.GetIgnoreBounds(), this.i18n.Get("quest.prompt.ignore"), primary: false);
     }
 
     private bool CanShowPrompt()
@@ -208,9 +208,12 @@ internal sealed class QuestPromptOverlay
         return new Rectangle(track.Right + 16, track.Y, 210, track.Height);
     }
 
-    private void DrawButton(SpriteBatch b, Rectangle bounds, string label)
+    private void DrawButton(SpriteBatch b, Rectangle bounds, string label, bool primary)
     {
-        Color tint = bounds.Contains(Game1.getMousePosition(true)) ? Color.Wheat : Color.White;
+        bool hovered = bounds.Contains(Game1.getMousePosition(true));
+        Color tint = primary
+            ? (hovered ? new Color(211, 151, 78) : new Color(237, 197, 127))
+            : (hovered ? new Color(220, 177, 112) : new Color(239, 218, 176));
         IClickableMenu.drawTextureBox(b, bounds.X, bounds.Y, bounds.Width, bounds.Height, tint);
         Vector2 size = Game1.smallFont.MeasureString(label);
         b.DrawString(

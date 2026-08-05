@@ -1,4 +1,4 @@
-namespace MultiplayerNpcLocator.Multiplayer;
+namespace NpcLocator.Multiplayer;
 
 internal sealed class RequestRateLimiter
 {

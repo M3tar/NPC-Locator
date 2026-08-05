@@ -1,10 +1,10 @@
 {
-  "Name": "Multiplayer NPC Locator",
+  "Name": "NPC Locator",
   "Author": "Mercury",
   "Version": "0.1.0",
-  "Description": "Finds and tracks NPC locations, schedules, and delivery quest targets in multiplayer.",
-  "UniqueID": "Mercury.MultiplayerNpcLocator",
-  "EntryDll": "MultiplayerNpcLocator.dll",
+  "Description": "Finds and tracks NPC locations, schedules, and delivery quest targets in solo and multiplayer games.",
+  "UniqueID": "Mercury.NpcLocator",
+  "EntryDll": "NpcLocator.dll",
   "MinimumApiVersion": "4.5.2",
   "Dependencies": [
     {

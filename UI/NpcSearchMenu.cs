@@ -1,13 +1,14 @@
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MultiplayerNpcLocator.Framework;
-using MultiplayerNpcLocator.Multiplayer;
+using NpcLocator.Framework;
+using NpcLocator.Multiplayer;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
 
-namespace MultiplayerNpcLocator.UI;
+namespace NpcLocator.UI;
 
 /// <summary>A phase-2 game-style NPC search and result menu.</summary>
 internal sealed class NpcSearchMenu : IClickableMenu
@@ -80,7 +81,7 @@ internal sealed class NpcSearchMenu : IClickableMenu
         this.getTrackerState = getTrackerState;
         this.getTrackedQuestKey = getTrackedQuestKey;
         this.locationNames = new LocationDisplayNameResolver(i18n);
-        this.allNpcs = npcs.OrderBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
+        this.allNpcs = SortNpcEntries(npcs, i18n.Locale).ToList();
         this.filteredNpcs = new List<NpcListEntry>(this.allNpcs);
         this.activeQuests = this.getActiveQuests().ToList();
         this.parchmentTexture = Game1.content.Load<Texture2D>("LooseSprites\\letterBG");
@@ -236,6 +237,13 @@ internal sealed class NpcSearchMenu : IClickableMenu
             this.exitThisMenu();
             return;
         }
+
+        // TextBox receives text through Game1.keyboardDispatcher. Don't also pass
+        // those keys to the base menu, where E and other configured menu buttons
+        // can be interpreted as a request to close the menu.
+        if (this.searchBox.Selected)
+            return;
+
         base.receiveKeyPress(key);
     }
 
@@ -873,6 +881,34 @@ internal sealed class NpcSearchMenu : IClickableMenu
             length--;
         }
         return text[..length] + ellipsis;
+    }
+
+    private static IEnumerable<NpcListEntry> SortNpcEntries(
+        IEnumerable<NpcListEntry> entries,
+        string locale
+    )
+    {
+        if (locale.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
+        {
+            StringComparer pinyinComparer = StringComparer.Create(
+                CultureInfo.GetCultureInfo("zh-CN"),
+                ignoreCase: true
+            );
+            return entries
+                .OrderBy(entry => HasChineseDisplayName(entry) ? 0 : 1)
+                .ThenBy(entry => entry.DisplayName, pinyinComparer)
+                .ThenBy(entry => entry.InternalName, StringComparer.OrdinalIgnoreCase);
+        }
+
+        return entries
+            .OrderBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(entry => entry.InternalName, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool HasChineseDisplayName(NpcListEntry entry)
+    {
+        return !string.Equals(entry.DisplayName, entry.InternalName, StringComparison.OrdinalIgnoreCase)
+            && entry.DisplayName.Any(character => character is >= '\u3400' and <= '\u9fff');
     }
 
     private string ResolveNpcDisplayName(string internalName, string? hostDisplayName)

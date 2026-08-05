@@ -1,6 +1,8 @@
-# Multiplayer NPC Locator
+# NPC Locator
 
-Multiplayer NPC Locator is a SMAPI mod by Mercury for Stardew Valley. It lets solo players, multiplayer hosts, and farmhands search for villagers, view their host-authoritative current location and standard daily schedule, and track one NPC or a standard item-delivery quest target.
+NPC Locator is a SMAPI mod by Mercury for Stardew Valley. It lets solo players, multiplayer hosts, and farmhands search for villagers, view their current location and standard daily schedule, and track one NPC or a standard item-delivery quest target.
+
+The mod began as a solution for farmhands who couldn't reliably look up NPCs in multiplayer, then grew into a complete locator and tracker for solo players, hosts, and farmhands alike.
 
 The mod is independent from Lookup Anything, doesn't change NPC behavior, and doesn't write tracking data to the save.
 
@@ -17,18 +19,19 @@ For a farmhand to query NPCs on remote locations, both the host and that farmhan
 
 1. Install SMAPI.
 2. Extract the release archive into the game's `Mods` folder.
-3. Confirm the resulting path is `Mods/MultiplayerNpcLocator/manifest.json`.
+3. Confirm the resulting path is `Mods/NpcLocator/manifest.json`.
 4. Launch the game through SMAPI.
 
-To update, replace only the existing `MultiplayerNpcLocator` folder with the folder from the new archive.
+To update, replace only the existing `NpcLocator` folder with the folder from the new archive. If you installed a pre-release build named `MultiplayerNpcLocator`, optionally back up its `config.json`, delete that old folder, then install the renamed build so SMAPI doesn't load both UniqueIDs. You can copy the backed-up config into `NpcLocator` afterward.
 
 ## Use
 
 - Press `F3` to open or close the locator.
-- **NPCs**: search by internal or localized display name, inspect the current location and today's standard schedule, refresh, or start manual tracking.
+- **NPCs**: search by internal or localized display name, inspect the current location and today's standard schedule, refresh, or start manual tracking. In Chinese, localized NPC names are ordered by pinyin and English fallback names follow them.
 - **Delivery quests**: inspect active standard item-delivery quests and track their target. You can return to this tab later to reattach task tracking.
 - While F3 is open, current tracking status appears inside the menu. After it closes, the compact tracker returns to the configured screen corner.
-- Current and next-stop locations include tile coordinates. Direction and approximate distance are shown when the player and NPC are on the same map.
+- Hover the tracker's top-right `×` and click it to stop the current tracking target without reopening F3.
+- Current and next-stop locations use aligned label, location, and coordinate columns. Direction and approximate distance appear on their own row when the player and NPC are on the same map; exceptionally long custom locations show their full name on hover.
 
 Tracking is session-only. It is cleared when returning to the title screen and isn't written to the game save.
 

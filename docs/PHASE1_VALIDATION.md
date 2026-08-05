@@ -4,7 +4,7 @@
 
 ## 准备
 
-1. 主机与联机加入者必须安装同一次构建生成的 `MultiplayerNpcLocator`。
+1. 主机与联机加入者必须安装同一次构建生成的 `NpcLocator`。
 2. 两端均使用 Stardew Valley 1.6.15 与 SMAPI 4.5.2。
 3. 完全退出游戏后再替换 DLL。
 4. 主机首次加载后会生成 `config.json`；以下默认值应保持不变：
@@ -24,13 +24,13 @@
 在任意单人档加载完成后执行：
 
 ```text
-mnl_query Pam
+nl_query Pam
 ```
 
 应输出 `status=Success`、实时地点和结构化日程。再执行：
 
 ```text
-mnl_query DefinitelyMissingNpc
+nl_query DefinitelyMissingNpc
 ```
 
 应输出 `status=NpcNotFound`，且没有未处理异常。
@@ -43,19 +43,19 @@ mnl_query DefinitelyMissingNpc
 4. 在非主机的 SMAPI 控制台执行：
 
 ```text
-mnl_query Pam
+nl_query Pam
 ```
 
 5. 再查询一个不在非主机当前地图中的 NPC：
 
 ```text
-mnl_query Abigail
+nl_query Abigail
 ```
 
 6. 最后执行：
 
 ```text
-mnl_query DefinitelyMissingNpc
+nl_query DefinitelyMissingNpc
 ```
 
 非主机日志应依次显示：
@@ -73,7 +73,7 @@ mnl_query DefinitelyMissingNpc
 
 - 主机完整 SMAPI 日志；
 - 非主机完整 SMAPI 日志；
-- 三次 `mnl_query` 的非主机控制台输出；
+- 三次 `nl_query` 的非主机控制台输出；
 - 查询时非主机所在地图，以及被查询 NPC 是否在同一地图。
 
 阶段 1 的当前实现不修改 NPC、任务或存档，也不接受文件路径、类型名或可执行指令。

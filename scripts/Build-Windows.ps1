@@ -10,7 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
-$ProjectFile = Join-Path $ProjectRoot "MultiplayerNpcLocator.csproj"
+$ProjectFile = Join-Path $ProjectRoot "NpcLocator.csproj"
 $ManifestPath = Join-Path $ProjectRoot "manifest.json"
 $Manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 
@@ -74,7 +74,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $OutputPath = Join-Path $ProjectRoot "bin\$Configuration\net6.0"
-$ModAssembly = Join-Path $OutputPath "MultiplayerNpcLocator.dll"
+$ModAssembly = Join-Path $OutputPath "NpcLocator.dll"
 if (-not (Test-Path $ModAssembly)) {
     throw "The build reported success, but the expected mod assembly was not found at '$ModAssembly'."
 }
@@ -89,9 +89,13 @@ if ($ReleaseZip) {
 
 if ($Install) {
     $ModsPath = Join-Path $ResolvedGamePath "Mods"
-    $TargetPath = Join-Path $ModsPath "MultiplayerNpcLocator"
+    $TargetPath = Join-Path $ModsPath "NpcLocator"
+    $LegacyTargetPath = Join-Path $ModsPath "MultiplayerNpcLocator"
     if (-not (Test-Path $ModsPath)) {
         throw "The SMAPI Mods folder was not found at '$ModsPath'. Run the SMAPI installer first."
+    }
+    if (Test-Path $LegacyTargetPath) {
+        throw "The pre-rename mod folder '$LegacyTargetPath' still exists. Remove it manually before installing NPC Locator so SMAPI doesn't load both UniqueIDs."
     }
     if (Test-Path $TargetPath) {
         if (-not $UpdateExisting) {
@@ -103,7 +107,7 @@ if ($Install) {
             throw "Refusing to update '$TargetPath' because it has no manifest.json."
         }
         $InstalledManifest = Get-Content $InstalledManifestPath -Raw | ConvertFrom-Json
-        if ($InstalledManifest.UniqueID -ne "Mercury.MultiplayerNpcLocator") {
+        if ($InstalledManifest.UniqueID -ne "Mercury.NpcLocator") {
             throw "Refusing to update '$TargetPath' because its UniqueID is '$($InstalledManifest.UniqueID)'."
         }
     }
@@ -112,7 +116,7 @@ if ($Install) {
     }
 
     Copy-Item $ModAssembly $TargetPath -Force
-    $Symbols = Join-Path $OutputPath "MultiplayerNpcLocator.pdb"
+    $Symbols = Join-Path $OutputPath "NpcLocator.pdb"
     if (Test-Path $Symbols) {
         Copy-Item $Symbols $TargetPath -Force
     }
@@ -139,9 +143,9 @@ if ($Package) {
         New-Item -ItemType Directory -Path $DistPath | Out-Null
     }
 
-    $PackagePath = Join-Path $DistPath "MultiplayerNpcLocator-$($Manifest.Version).zip"
-    $StagingPath = Join-Path ([System.IO.Path]::GetTempPath()) ("MultiplayerNpcLocator-package-" + [Guid]::NewGuid().ToString("N"))
-    $PackageFolder = Join-Path $StagingPath "MultiplayerNpcLocator"
+    $PackagePath = Join-Path $DistPath "NpcLocator-$($Manifest.Version).zip"
+    $StagingPath = Join-Path ([System.IO.Path]::GetTempPath()) ("NpcLocator-package-" + [Guid]::NewGuid().ToString("N"))
+    $PackageFolder = Join-Path $StagingPath "NpcLocator"
     try {
         New-Item -ItemType Directory -Path $PackageFolder -Force | Out-Null
         Copy-Item $ModAssembly $PackageFolder -Force

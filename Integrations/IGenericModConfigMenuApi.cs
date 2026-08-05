@@ -1,7 +1,7 @@
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 
-namespace MultiplayerNpcLocator.Integrations;
+namespace NpcLocator.Integrations;
 
 /// <summary>The subset of the Generic Mod Config Menu API used by this mod.</summary>
 public interface IGenericModConfigMenuApi

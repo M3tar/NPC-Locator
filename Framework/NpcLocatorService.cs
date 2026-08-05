@@ -1,8 +1,8 @@
-using MultiplayerNpcLocator.Multiplayer;
+using NpcLocator.Multiplayer;
 using StardewValley;
 using StardewValley.Pathfinding;
 
-namespace MultiplayerNpcLocator.Framework;
+namespace NpcLocator.Framework;
 
 /// <summary>Reads host-authoritative NPC state without changing game state.</summary>
 internal sealed class NpcLocatorService

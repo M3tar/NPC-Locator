@@ -28,7 +28,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\Build-Windows.ps1 -Install
 ```
 
-首次安装时，脚本只会创建新的 `Mods\MultiplayerNpcLocator` 文件夹；如果同名目录已经存在且未明确要求更新，脚本会停止，不会覆盖。
+首次安装时，脚本只会创建新的 `Mods\NpcLocator` 文件夹；如果同名目录已经存在且未明确要求更新，脚本会停止，不会覆盖。如果检测到重命名前的 `Mods\MultiplayerNpcLocator` 测试版，脚本也会停止，并要求先手动删除旧目录，避免两个 UniqueID 同时加载。
 
 更新已经安装的本 Mod 时使用：
 
@@ -36,7 +36,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\Build-Windows.ps1 -Install -UpdateExisting
 ```
 
-脚本会先确认现有 `manifest.json` 的 UniqueID 是 `Mercury.MultiplayerNpcLocator`，然后只更新本 Mod 的 DLL、PDB、manifest 和 i18n 翻译文件。
+脚本会先确认现有 `manifest.json` 的 UniqueID 是 `Mercury.NpcLocator`，然后只更新本 Mod 的 DLL、PDB、manifest 和 i18n 翻译文件。
 
 如果 Steam 不在默认目录，请指定包含 `Stardew Valley.dll` 和 `StardewModdingAPI.dll` 的游戏目录：
 
@@ -47,20 +47,20 @@ Set-ExecutionPolicy -Scope Process Bypass
 成功时应看到：
 
 ```text
-Build succeeded: ...\MultiplayerNpcLocator.dll
-Installed or updated validation build at: ...\Mods\MultiplayerNpcLocator
+Build succeeded: ...\NpcLocator.dll
+Installed or updated validation build at: ...\Mods\NpcLocator
 ```
 
 如果只想构建、不自动复制到 Mods，省略 `-Install`。Release DLL 位于：
 
 ```text
-bin\Release\net6.0\MultiplayerNpcLocator.dll
+bin\Release\net6.0\NpcLocator.dll
 ```
 
 ## 三、确认 Mod 加载
 
 1. 通过 SMAPI 启动游戏。
-2. 启动日志的 Mod 列表中应出现 `Multiplayer NPC Locator 0.1.0 by Mercury`。
+2. 启动日志的 Mod 列表中应出现 `NPC Locator 0.1.0 by Mercury`。
 3. 不应出现红色的本 Mod 加载或编译错误。
 4. 载入一个普通存档；本轮验证可先在单人模式完成。
 
@@ -69,19 +69,19 @@ bin\Release\net6.0\MultiplayerNpcLocator.dll
 存档加载完成后，在 SMAPI 控制台执行：
 
 ```text
-mnl_validate Pam
+nl_validate Pam
 ```
 
 再选择一个当前能在游戏中见到的原版 NPC，例如：
 
 ```text
-mnl_validate Abigail
+nl_validate Abigail
 ```
 
 最后验证不存在的目标：
 
 ```text
-mnl_validate DefinitelyMissingNpc
+nl_validate DefinitelyMissingNpc
 ```
 
 预期日志应分别包含：
@@ -95,7 +95,7 @@ mnl_validate DefinitelyMissingNpc
 为了验证物品交付任务字段，请先接取一个公告栏物品交付任务，不要完成，然后再次运行：
 
 ```text
-mnl_validate Pam
+nl_validate Pam
 ```
 
 探针只读取内存中的 NPC 与任务信息，不修改 NPC、任务或存档。
@@ -106,7 +106,7 @@ mnl_validate Pam
 
 1. PowerShell 从版本检测到 `Build succeeded` 的完整输出；
 2. 游戏启动后完整的 SMAPI 日志链接；
-3. 上述三次 `mnl_validate` 的输出；
+3. 上述三次 `nl_validate` 的输出；
 4. 存在物品交付任务时的验证输出；
 5. 当天是否为普通日、雨天、节日或剧情事件日。
 
@@ -117,7 +117,7 @@ mnl_validate Pam
 退出游戏后，删除这个明确的目录即可：
 
 ```text
-Stardew Valley\Mods\MultiplayerNpcLocator
+Stardew Valley\Mods\NpcLocator
 ```
 
 本 Mod 不写入存档，阶段 0 探针也不改变游戏状态。

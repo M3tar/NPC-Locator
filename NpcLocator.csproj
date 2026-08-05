@@ -4,9 +4,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>MultiplayerNpcLocator</AssemblyName>
-    <RootNamespace>MultiplayerNpcLocator</RootNamespace>
-    <ModFolderName>MultiplayerNpcLocator</ModFolderName>
+    <AssemblyName>NpcLocator</AssemblyName>
+    <RootNamespace>NpcLocator</RootNamespace>
+    <ModFolderName>NpcLocator</ModFolderName>
     <EnableModDeploy>false</EnableModDeploy>
     <EnableModZip>true</EnableModZip>
   </PropertyGroup>

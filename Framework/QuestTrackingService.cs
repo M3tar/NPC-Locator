@@ -2,7 +2,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Quests;
 
-namespace MultiplayerNpcLocator.Framework;
+namespace NpcLocator.Framework;
 
 /// <summary>Reads the local player's standard item-delivery quests without changing them.</summary>
 internal sealed class QuestTrackingService

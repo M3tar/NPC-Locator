@@ -1,101 +1,148 @@
-# 任务交接：联机 NPC 定位器规划与开发准备
+# 任务交接：NPC 定位器 0.1.0 候选版验收
 
-生成时间：2026-07-31 16:09:41 CST（Asia/Shanghai，UTC+08:00）  
-项目：Multiplayer NPC Locator（联机 NPC 定位器）  
-任务标识：`multiplayer-npc-locator-planning`  
-状态：进行中（规划已确认，尚未编码）  
-版本控制：当前目录不是 Git 仓库，因此没有可核对的源分支或源提交
+生成时间：2026-08-01 01:42:54 CST（Asia/Shanghai，UTC+08:00）
+项目：NPC Locator（NPC 定位器；原名 Multiplayer NPC Locator / 联机 NPC 定位器）
+任务标识：`multiplayer-npc-locator-planning`
+状态：进行中（阶段 5 最终验收）
+源分支：`main`
+源提交：`9f7efc5212e37de325a2c46c50bc45fc2f35d181`
 
 ## 任务概述
 
-开发一个独立的 SMAPI Mod，让《星露谷物语》联机中的非主机玩家通过主机权威数据查询 NPC 的实时位置与今日标准日程，并可追踪当前 NPC 或标准物品交付任务的目标 NPC。该 Mod 不修改 Lookup Anything，也不修改游戏存档。
+开发一个独立 SMAPI Mod，让单人玩家、联机主机和农场助手查询 NPC 实时位置与今日标准日程，并追踪一名 NPC 或标准物品交付任务目标。主机为联机 NPC 数据权威源；任务仅在当地玩家任务日志中读取。
 
-完整范围、架构、通信协议、阶段划分和验收标准见 `docs/DEVELOPMENT_PLAN.md`，不要在接手时重新设计或复述整份计划。
+完整范围与验收标准见 `docs/DEVELOPMENT_PLAN.md`，当前进度见 `docs/STATUS.md`。
 
 ## 成功标准
 
-- 主机与查询者均安装本 Mod 后，非主机可查询原版 NPC 的实时位置和可用的今日标准日程。
-- 查询者可使用默认 `F3`（可自定义）打开界面，并持续追踪一名 NPC。
-- 可在本地识别标准物品交付任务，并由玩家选择是否追踪目标 NPC。
-- 主机默认静默响应，不暂停游戏、不改变 NPC、任务或存档。
-- 提供简体中文和英文，并在 Stardew Valley 1.6.15 / SMAPI 4.5.2 环境完成双方联机验证。
+- 主机和农场助手使用同一个 0.1.0 二进制包，可完成查询、日程显示、手动追踪和任务关联追踪。
+- 主机端默认静默响应农场助手，主机自己也可用 F3 本地查询。
+- 不修改 NPC、任务或存档；删除 Mod 后原存档正常加载。
+- Stardew Valley 1.6.15 / SMAPI 4.5.2 / Windows 双方最终日志无本 Mod 未处理错误。
+- 交付可直接解压到 `Mods` 的 `NpcLocator-0.1.0.zip`。
 
 ## 当前状态
 
-需求、产品边界和主要技术方案已经确认，项目尚未创建 C# 工程，也没有 Mod 源代码。下一阶段是“阶段 0：构建与 API 验证”。当前开发机器上是否具备可用于编译的 Stardew Valley 与 SMAPI 程序集仍待验证。
+- 阶段 0–4 已完成；用户已在 Windows 单人档和联机档多轮测试查询 UI、主机/农场助手查询、地点本地化、GMCM、追踪、送货任务分页和重新关联，最新反馈为“没有什么问题”。
+- 阶段 5 发布资料和构建脚本已提交：`9f7efc5 chore: prepare the 0.1.0 private beta candidate`。
+- 原候选源码包 `dist/MultiplayerNpcLocator-0.1.0-rc1-source.zip` 已被产品重命名取代，不再用于阶段 5 测试。
+- rc2 源码包已在 Windows 成功构建、安装并生成二进制包；其单人档冒烟未发现问题。
+- rc2 二进制包 SHA-256：`131ab6fb236c5819647a944be5b28e3e03cc40b1eec5495f4f2ebf58b61613e9`。
+- rc2 单人测试后新增了追踪栏快速停止按钮，因此 rc2 不再作为最终阶段 5 候选。
+- rc3 源码包 SHA-256：`f3bd7deaca70c8290d5b7b2a3adb01bb5fe09c4aee9a28bf2b41e6f841e46d08`；单人测试发现关闭按钮悬停色偏白，以及搜索输入 `e` 会触发默认菜单键关闭窗口。
+- rc4 已将悬停色统一为棕金色，并在搜索框选中时阻止文本按键继续传给基础菜单；后续单人测试发现长中文下一站会越出追踪栏。
+- rc4 源码包 SHA-256：`2765be29ca1e0482ff275902b731e3eafa815338f335637d8a5b92236b06c2bb`。
+- rc5 对追踪栏详情使用游戏字体的本地化换行，并根据实际换行数动态增加高度，保留完整时间、地点名和坐标。
+- rc5 源码包 SHA-256：`fd95191c3c1ab84ad720fb96140bc7e610278cc6df37ce4350118e1ed52cd911`。
+- rc6 在中文游戏语言下按本地化人物名拼音排序，英文回退项置后。
+- rc6 源码包 SHA-256：`ead4fe3b03ae3aeb053464521540a1618129088c4dbfd0767963229557eb4c71`。
+- rc7 按用户选定的方案 A 将追踪栏改为“标签或时间 / 地点 / 坐标”三列，方向和距离独立成行，极端长地点用省略号及悬停全文兜底；当前候选源码包为 `dist/NpcLocator-0.1.0-rc7-source.zip`。
+- rc7 源码包 SHA-256：`a48a6d3d41207b6de9a557b757ca00de671c784cf90da0306ac458772fef13a0`。
+- rc8 将追踪栏首选宽度缩至 540 像素，移除坐标底块和方向行专属分隔线，保留深棕坐标并贴齐右侧；当前候选源码包为 `dist/NpcLocator-0.1.0-rc8-source.zip`。
+- rc8 源码包 SHA-256：`d2cc67c0d00afe63371e30b0f7bddbaf9fb551873545acbd2c584854bdb79f10`。
+- rc9 将追踪栏背景改为与 F3 查询窗口相同的 `LooseSprites/letterBG`，按卡片比例居中裁切以消除 `drawTextureBox` 的固定横向明暗带；当前候选源码包为 `dist/NpcLocator-0.1.0-rc9-source.zip`。
+- rc9 源码包 SHA-256：`87a5314e00a8d3f345dbd31b1a9e8eabc92204376af5d4143450385b678e0697`。
+- rc10 根据实机反馈改用原版背包/菜单风格：保留原生菜单纹理的九宫格边框和阴影，中心仅取同一纹理的稳定暖色像素铺开，避免 rc8 横向色带和 rc9 信纸裁切感；当前候选源码包为 `dist/NpcLocator-0.1.0-rc10-source.zip`。
+- rc10 源码包 SHA-256：`a22b44fee477ef4887a4bba3761151d62b8e7977aa23170a986617985f1ee8e4`。
+- rc11 将 rc10 的原生菜单面板提取为追踪栏与右下角任务提示共用组件；任务提示保持不透明，追踪与忽略按钮改用有主次关系的棕金色阶；当前候选源码包为 `dist/NpcLocator-0.1.0-rc11-source.zip`。
+- rc11 源码包 SHA-256：`3eec63c9cfc79f8587ccbde21b33b32646c9ebf0f119e70a9c20d437a46d7212`。
+- `phase4f-source.zip` 与 rc1 的游戏功能代码基本相同；rc2 统一产品技术标识，rc3 加入追踪栏右上角 `×`，rc4 修复首轮反馈，rc5 修复长地点名溢出，rc6 加入中文拼音排序，rc7 采用三列追踪布局，rc8 统一信息行并收窄卡片，rc9 尝试信纸背景，rc10 改为原生菜单混合背景，rc11 统一任务提示。后续只使用 rc11。
+- 当前 Mac 没有 `dotnet`、PowerShell、Stardew Valley 或 SMAPI 程序集，因此新增 `-Package` 流程尚未实际执行；需在 Windows 完成首次运行。
 
 ## 已完成工作
 
-- 对照了主机与联机加入者的 SMAPI 日志，确认双方的主要环境。
-- 确认问题来自非主机可见的联机同步数据有限，并采用主机权威查询方案。
-- 完成详细开发计划、设计决策记录和状态文档。
-- 建立项目名称、作者、UniqueID、初版范围、交互原则和测试方向。
+- 已实现协议版本、请求 ID、主机权限、超时、限频、过期响应丢弃、断线与返回标题清理。
+- F3 羊皮纸窗口包含“NPC 查询/送货任务”分页、本地化搜索、实时位置、坐标、标准日程、刷新和追踪控制。
+- 同时追踪一名 NPC；角落 HUD 显示实时地点/坐标、下一站/日程坐标、同地图文字方向和大致距离。
+- F3 打开时不重复绘制角落 HUD，而在窗口内即时显示手动/任务追踪来源和最新位置；重新打开 F3 会恢复对应 NPC 或任务分页。
+- 只读当地 `ItemDeliveryQuest`，显示任务、目标、物品、需要/持有数和期限；提示去重，任务结束时只停止仍与该任务关联的追踪。
+- GMCM 为可选依赖；已接入快捷键、任务识别、追踪栏、主机共享和限频设置。
+- 已添加 `README.md`、`README.zh-CN.md`、`CHANGELOG.md`、`docs/KNOWN_LIMITATIONS.md` 和 `docs/PHASE5_VALIDATION.md`。
+- `scripts/Build-Windows.ps1 -Package` 会拒绝 Debug，在独立临时目录组装最终包，生成 `dist/NpcLocator-0.1.0.zip` 并输出 SHA-256。
+- 已在阶段 5 最终包测试前将产品改名为 `NPC Locator` / “NPC 定位器”；安装脚本发现旧 `Mods/MultiplayerNpcLocator` 时会停止并要求手动删除，避免两个 UniqueID 同时加载。
+- 追踪栏右上角新增悬停 `×`：点击会停止当前手动或任务关联追踪并拦截输入；任务关联只解除，不修改任务。
+- rc4 将 `×` 悬停背景改为当前界面的棕金配色，并修复英文搜索输入 `e` 时窗口被基础菜单关闭的问题。
+- rc5 将追踪栏详情行改为按可用宽度自动换行，解决长本地化地点名越界。
+- rc6 在中文游戏语言下使用固定 `zh-CN` 文化规则排列人物名；缺少中文显示名的英文回退项置后，同音时以内部分名稳定排序。
+- rc7 采用三列结构化追踪栏，坐标独立右对齐，方向与距离单独成行，小视窗自动收窄，极端长地点悬停显示全文。
+- rc8 统一追踪栏各行的羊皮纸背景，坐标不再使用独立底块，卡片首选宽度缩至 540 像素。
+- rc9 使用与 F3 查询窗口一致的游戏原生羊皮纸纹理，并按追踪框比例居中裁切，避免旧背景固定的横向明暗带。
+- rc10 使用原版菜单纹理的边框与阴影，并以同纹理中心色统一内层，保留背包式原生观感而不恢复横向色带。
+- rc11 让送货任务提示复用同一原生菜单面板，按钮采用棕金主次色阶，不再使用白色悬停状态。
 
 ## 已确认决策
 
-- 作者：Mercury；UniqueID：`Mercury.MultiplayerNpcLocator`；首版：`0.1.0` 私人内测。
-- 本项目独立于 Lookup Anything；双方只需安装本 Mod，Lookup Anything 对双方均为可选。
-- 默认按键为 `F3`，使用 `KeybindList` 并支持 GMCM / `config.json` 改键。
-- 主机首版仅提供总开关，不实现逐玩家权限。
-- 同时只追踪一名 NPC；手动追踪跨游戏日保留，但退出或重新载入后清除。
-- 首版仅自动识别标准物品交付任务，采用非阻塞提示，不强制覆盖当前追踪目标。
-- 首版先实现文字方向与距离，方向箭头后续增强；先做基础手柄按键兼容。
-- UI 必须区分“实时位置”和“今日标准日程”；遇到节日、事件或脚本控制时不得伪造日程或预测位置。
-- 最低目标为游戏 1.6.15，避免依赖 1.6.16 独有 API；首版正式支持原版 NPC。
+- 作者 Mercury；名称 `NPC Locator` / “NPC 定位器”；UniqueID `Mercury.NpcLocator`；首版 `0.1.0` 私人内测。
+- 独立于 Lookup Anything，不引用、修改或硬依赖它。
+- 单人、主机、农场助手均可 F3 主动查询；农场助手远程数据来自主机。
+- 默认 F3，可通过 GMCM / `config.json` 改键；不尝试自动解决全局快捷键冲突。
+- 同时只追踪一名 NPC；追踪不写存档，返回标题后清除。
+- 任务内容只在当地读取，不发送给主机；首版只识别标准物品交付任务。
+- UI 严格区分“实时位置”和“今日标准日程”；事件控制或无日程时不伪造预测。
+- 未解锁姜岛时 `Leo` 仍保留在完整 NPC 名单中，但显示暂时无法定位；不过滤隐藏。
+- F3 打开时使用窗口内追踪卡片，不同时在屏幕角落重复显示 HUD。
+- 方向箭头不阻塞 0.1.0；首版保留文字方向与距离。
 
-以上决策的完整记录和变更规则见 `docs/DECISIONS.md`。
+详细决策编号见 `docs/DECISIONS.md`。
 
 ## 重要发现
 
-- 已验证的双方日志环境：Windows 11、Stardew Valley 1.6.15 build 24356、SMAPI 4.5.2、Lookup Anything 1.55.0、GMCM 1.16.0，未发现大型 NPC/地图扩展。
-- 联机加入者额外安装 MouseMoveMode，与本项目无直接关系。
-- 主机日志的 RivaTuner 警告与 NPC 查询无直接关系；只有后续出现崩溃或渲染问题时再排查。
-- 联机加入者日志曾出现 Pam 相关 NPC 事件错误。实现时必须把 NPC 暂时不存在、处于事件中或无标准日程视为正常可返回状态，不能因此崩溃。
-- SMAPI 无法可靠检测所有第三方 Mod 的快捷键冲突，已决定通过自由改键解决。
+- Windows 1.6.15 / SMAPI 4.5.2 实测确认 `NPC.Schedule` 为 `Dictionary<int, StardewValley.Pathfinding.SchedulePathDescription>`，稳定字段已记录在 `docs/STATUS.md`。
+- `Game1.player.questLog` 是 `Netcode.NetObjectList<Quest>`；`ItemDeliveryQuest.accepted` 在仍活动的剧情任务中可为 `False`，生产逻辑必须以任务日志成员关系及 `completed` / `destroy` 为主。
+- `SebastianRoom` 类地图可缺少有效显示名；已使用客户端语言下的 NPC 本地化名 + 房间模板回退。
+- Lookup Anything 羊皮纸视觉来自游戏自带 `LooseSprites/letterBG`；本 Mod 使用同一游戏资源，不复制资源、不依赖对方 DLL。
+- .NET 6 SDK 可显示 ModBuildConfig 4.4.0 分析器 `CS9057` 警告；该警告不是已知构建失败原因。
+
+## 已尝试但未采用的方案
+
+- 曾尝试在列表中过滤当前存档无角色实例的 `Leo`；用户决定保留完整名单，该未提交修改已完整撤销。不要重新引入过滤。
+- 早期 UI 使用 `drawBackground` 导致蓝色山景替换游戏背景，且半透明区块/拉伸九宫格导致纸张明暗不一；已改为游戏 `letterBG` 统一绘制，不要恢复旧方案。
+- 曾考虑 F3 打开时仍在角落显示 HUD；用户接受“窗口内卡片，关闭后角落 HUD”方案，不要重复绘制。
 
 ## 当前修改和工作区状态
 
-当前项目目录：`repository root`
-
-现有文件：
-
-- `README.md`
-- `docs/DEVELOPMENT_PLAN.md`
-- `docs/DECISIONS.md`
-- `docs/STATUS.md`
-- `handoffs/multiplayer-npc-locator-planning.md`
-
-该目录不是 Git 仓库；以上文件没有 Git 提交或远程推送保障。不要假定另一台设备能够取得这些内容。
+- 项目根目录：`repository root`
+- 本 handoff 写入前，`main` 位于 `9f7efc5212e37de325a2c46c50bc45fc2f35d181`，工作区干净。
+- 原 handoff 写入后只有本文件为未提交修改；2026-08-01 用户确认重命名后，项目、源码、脚本、翻译和文档均有待提交修改。
+- `dist/` 被 `.gitignore` 忽略；候选源码 zip 只存在当前设备，不在 Git 提交中。
+- 仓库没有配置 Git remote，所有 commit 仅在当前设备。
 
 ## 下一步
 
-严格从阶段 0 开始，不要直接实现完整 UI：
+1. 在 Windows 解压 `NpcLocator-0.1.0-rc11-source.zip`；若旧的 `Mods\MultiplayerNpcLocator` 测试目录仍存在，先手动删除。
+2. 在源码目录运行：
 
-1. 再次核对项目路径和现有三份文档，避免覆盖用户已确认的设计。
-2. 验证本机 Stardew Valley、SMAPI 和 .NET 6 构建环境及程序集路径。
-3. 创建最小 SMAPI C# 项目，引入 `Pathoschild.Stardew.ModBuildConfig`，设置作者 Mercury、版本 `0.1.0` 和 UniqueID。
-4. 构建并确认最小 Mod 可由 SMAPI 加载。
-5. 用小型验证代码确认 1.6.15 中 NPC 查找、实时地点与坐标、地点显示名、`NPC.Schedule` 的读取行为。
-6. 验证标准物品交付任务的稳定读取字段，并记录事件、节日、NPC 缺席等边界结果。
-7. 将验证结果更新到 `docs/STATUS.md`；若产生新的重要产品或架构决定，按编号追加到 `docs/DECISIONS.md`。
-8. 阶段 0 通过后，再按计划顺序开发：联机通信 → 查询 UI → 持续追踪 → 任务识别 → 方向箭头。
+   ```powershell
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build-Windows.ps1 -Install -UpdateExisting -Package
+   ```
+
+   若非默认 Steam 库，追加 `-GamePath 'D:\SteamLibrary\steamapps\common\Stardew Valley'`。
+3. 核对首次 `-Package` 执行：Release 编译成功，安装目录安全更新，并生成 `dist\NpcLocator-0.1.0.zip` 与 SHA-256。如编译/打包失败，先根据完整 PowerShell 输出修复，不跳过验证。
+4. 主机和农场助手使用同一个二进制包，按 `docs/PHASE5_VALIDATION.md` 完成最终联机、安装组合、共享权限、断线、UI/游戏边界与卸载测试。
+5. 收集最终二进制包 SHA-256 以及主机/农场助手 SMAPI 日志。全部通过后，更新 `docs/STATUS.md`，标记 0.1.0 私人内测候选版完成。
+6. 如需要跨设备通过 Git 继续，先提交本 handoff，再配置 remote 并 push；另一设备 pull 后再核对分支与提交。`dist` 候选 zip 需单独传输或在目标设备从 commit 重新生成。
 
 ## 相关文件与资料
 
-- `docs/DEVELOPMENT_PLAN.md`：完整开发计划、协议草案、阶段与验收标准。
-- `docs/DECISIONS.md`：全部已确认决定，后续不得无记录地推翻。
-- `docs/STATUS.md`：当前进度、阻塞项和下一步。
-- `README.md`：项目入口与定位。
-- 联机加入者日志：<https://smapi.io/log/f97102cbcdff46d188a94e7f6d0d565b>
-- 主机日志：<https://smapi.io/log/08225e5343144c6db3e142767d0a1995>
-- SMAPI 联机 API：<https://wiki.stardewvalley.net/Modding%3AModder_Guide/APIs/Multiplayer>
-- SMAPI Mod 入门与构建：<https://wiki.stardewvalley.net/Modding%3AModder_Guide/Get_Started>
+- `docs/STATUS.md`：最新进度、验证证据与阻塞。
+- `docs/DEVELOPMENT_PLAN.md`：范围、阶段与验收标准。
+- `docs/DECISIONS.md`：已确认产品/架构决策。
+- `docs/PHASE5_VALIDATION.md`：下一轮必须使用的最终验收清单。
+- `README.md` / `README.zh-CN.md`：英文/中文安装使用说明。
+- `docs/KNOWN_LIMITATIONS.md`：双语已知限制。
+- `scripts/Build-Windows.ps1`：Windows 构建、安全更新与最终打包。
+- `dist/NpcLocator-0.1.0-rc11-source.zip`：当前设备候选源码包（Git 忽略）。
+
+## 建议使用的 Skills
+
+- Windows 构建或运行时出现失败、抛错或行为不符合预期时，使用 `diagnosing-bugs`。
+- 需要再次暂停、换设备或换 agent 时，使用 `handoff` 更新本文件。
 
 ## 接手注意事项
 
-- 先验证再编码；不要把 Lookup Anything 作为依赖，也不要尝试修改其 DLL 或界面。
-- 查询者和主机都必须安装本 Mod。主机无需主动操作，默认应静默处理请求。
-- 玩家任务内容只在查询者本地解析，不发送给主机。
-- 不写入游戏存档，不做自动寻路、自动交付或传送。
-- 任何网络响应都要有请求 ID、协议版本、超时处理和明确的失败状态；客户端不能通过消息要求主机执行任意代码、读取文件或实例化任意类型。
-- 若实际 API 行为与计划假设不一致，先记录证据与影响，再更新决策文档；不要悄悄改变产品语义。
+- 先核对路径、`main`、源提交 `9f7efc5` 与工作区；不要根据旧 handoff 重新从阶段 0 开始。
+- 当前没有尚未回答的产品问题；直接执行“下一步”。
+- 不要修改 Lookup Anything，不引用其 DLL，不复制其资源。
+- 不要将任务内容发送给主机，不要写存档，不要用日程坐标冒充实时位置。
+- 不要过滤未解锁的 `Leo`，不要恢复替换游戏背景或纸张色块不一的旧 UI 绘制。
+- 工作区可能只因本 handoff 而不干净；这是用户请求的未提交交接文档，不要误删或用旧版覆盖。

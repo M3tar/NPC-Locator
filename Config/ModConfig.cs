@@ -1,6 +1,6 @@
 using StardewModdingAPI.Utilities;
 
-namespace MultiplayerNpcLocator.Config;
+namespace NpcLocator.Config;
 
 internal sealed class ModConfig
 {

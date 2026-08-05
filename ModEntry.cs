@@ -1,13 +1,14 @@
-using MultiplayerNpcLocator.Config;
-using MultiplayerNpcLocator.Framework;
-using MultiplayerNpcLocator.Integrations;
-using MultiplayerNpcLocator.Multiplayer;
-using MultiplayerNpcLocator.UI;
+using Microsoft.Xna.Framework;
+using NpcLocator.Config;
+using NpcLocator.Framework;
+using NpcLocator.Integrations;
+using NpcLocator.Multiplayer;
+using NpcLocator.UI;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 
-namespace MultiplayerNpcLocator;
+namespace NpcLocator;
 
 /// <summary>The mod entry point.</summary>
 public sealed class ModEntry : Mod
@@ -55,18 +56,18 @@ public sealed class ModEntry : Mod
         helper.Events.Multiplayer.PeerDisconnected += this.OnPeerDisconnected;
 
         helper.ConsoleCommands.Add(
-            "mnl_validate",
-            "Run phase-0 API probes. Usage: mnl_validate [NPC internal name]",
+            "nl_validate",
+            "Run phase-0 API probes. Usage: nl_validate [NPC internal name]",
             this.OnValidateCommand
         );
         helper.ConsoleCommands.Add(
-            "mnl_query",
-            "Run a phase-1 local or host-authoritative query. Usage: mnl_query <NPC internal name>",
+            "nl_query",
+            "Run a phase-1 local or host-authoritative query. Usage: nl_query <NPC internal name>",
             this.OnQueryCommand
         );
 
         this.Monitor.Log(
-            "Multiplayer NPC Locator 0.1.0 loaded. Use 'mnl_query <NPC name>' for the phase-1 query test.",
+            "NPC Locator 0.1.0 loaded. Use 'nl_query <NPC name>' for the phase-1 query test.",
             LogLevel.Info
         );
     }
@@ -217,7 +218,7 @@ public sealed class ModEntry : Mod
     {
         if (args.Length == 0)
         {
-            this.Monitor.Log("Usage: mnl_query <NPC internal name>", LogLevel.Warn);
+            this.Monitor.Log("Usage: nl_query <NPC internal name>", LogLevel.Warn);
             return;
         }
 
@@ -226,14 +227,21 @@ public sealed class ModEntry : Mod
 
     private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
     {
-        if (e.Button == SButton.MouseLeft
-            && this.questPrompt?.ReceiveLeftClick(
-                Game1.getMousePosition(true).X,
-                Game1.getMousePosition(true).Y
-            ) == true)
+        if (e.Button == SButton.MouseLeft)
         {
-            this.Helper.Input.Suppress(e.Button);
-            return;
+            Point mouse = Game1.getMousePosition(true);
+            if (this.tracker?.ReceiveLeftClick(mouse.X, mouse.Y) == true)
+            {
+                this.OnStopTracking();
+                Game1.playSound("smallSelect");
+                this.Helper.Input.Suppress(e.Button);
+                return;
+            }
+            if (this.questPrompt?.ReceiveLeftClick(mouse.X, mouse.Y) == true)
+            {
+                this.Helper.Input.Suppress(e.Button);
+                return;
+            }
         }
 
         if (!Context.IsWorldReady

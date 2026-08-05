@@ -1,10 +1,10 @@
-using MultiplayerNpcLocator.Config;
-using MultiplayerNpcLocator.Framework;
+using NpcLocator.Config;
+using NpcLocator.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 
-namespace MultiplayerNpcLocator.Multiplayer;
+namespace NpcLocator.Multiplayer;
 
 /// <summary>Coordinates phase-1 requests, responses, timeouts, and host validation.</summary>
 internal sealed class MultiplayerQueryCoordinator
@@ -100,7 +100,7 @@ internal sealed class MultiplayerQueryCoordinator
         {
             this.ReportClientFailure(
                 npcName,
-                "The host doesn't have Multiplayer NPC Locator installed.",
+                "The host doesn't have NPC Locator installed.",
                 logToConsole
             );
             return;
@@ -232,7 +232,7 @@ internal sealed class MultiplayerQueryCoordinator
     {
         ProtocolHello hello = e.ReadAs<ProtocolHello>();
         this.monitor.Log(
-            $"Peer {e.FromPlayerID} reports Multiplayer NPC Locator {hello.ModVersion} with protocol {hello.ProtocolVersion}.",
+            $"Peer {e.FromPlayerID} reports NPC Locator {hello.ModVersion} with protocol {hello.ProtocolVersion}.",
             hello.ProtocolVersion == Protocol.Version ? LogLevel.Trace : LogLevel.Warn
         );
     }

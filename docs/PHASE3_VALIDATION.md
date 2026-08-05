@@ -16,7 +16,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build-Windows.
 
 1. 确认构建成功，且没有本 Mod 的 C# 错误。
 2. 启动 SMAPI，确认本 Mod 正常加载。
-3. 安装了 GMCM 时，在设置列表中确认出现“联机 NPC 定位器”；没有 GMCM 时，本 Mod 也必须正常加载。
+3. 安装了 GMCM 时，在设置列表中确认出现“NPC 定位器”；没有 GMCM 时，本 Mod 也必须正常加载。
 
 ## 地点名回归
 

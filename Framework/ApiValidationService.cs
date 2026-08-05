@@ -4,7 +4,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Quests;
 
-namespace MultiplayerNpcLocator.Framework;
+namespace NpcLocator.Framework;
 
 /// <summary>Temporary, read-only probes for the phase-0 API verification.</summary>
 internal static class ApiValidationService

@@ -1,4 +1,4 @@
-namespace MultiplayerNpcLocator.Multiplayer;
+namespace NpcLocator.Multiplayer;
 
 public sealed class ProtocolHello
 {

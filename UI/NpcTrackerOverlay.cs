@@ -1,19 +1,24 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerNpcLocator.Config;
-using MultiplayerNpcLocator.Framework;
-using MultiplayerNpcLocator.Multiplayer;
+using NpcLocator.Config;
+using NpcLocator.Framework;
+using NpcLocator.Multiplayer;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
 
-namespace MultiplayerNpcLocator.UI;
+namespace NpcLocator.UI;
 
 /// <summary>Maintains and draws one transient NPC tracking target.</summary>
 internal sealed class NpcTrackerOverlay
 {
-    private const int OverlayWidth = 440;
-    private const int OverlayHeight = 190;
+    private const int PreferredOverlayWidth = 540;
+    private const int ContentPadding = 24;
+    private const int HeaderHeight = 76;
+    private const int RowHeight = 40;
+    private const int BottomPadding = 16;
+    private const int LabelWidth = 92;
+    private const int CoordinateWidth = 80;
 
     private readonly ModConfig config;
     private readonly ITranslationHelper i18n;
@@ -81,59 +86,72 @@ internal sealed class NpcTrackerOverlay
         }
     }
 
+    public bool ReceiveLeftClick(int x, int y)
+    {
+        return Context.IsWorldReady
+            && this.CanShow()
+            && Game1.activeClickableMenu is null
+            && this.GetCloseButtonBounds(this.GetBounds()).Contains(x, y);
+    }
+
     public void Draw(SpriteBatch b)
     {
-        if (!this.config.ShowTrackerOverlay || this.TrackedNpcName is null)
+        if (!this.CanShow())
             return;
 
         Rectangle bounds = this.GetBounds();
         float opacity = Math.Clamp(this.config.TrackerOpacityPercent, 35, 100) / 100f;
-        IClickableMenu.drawTextureBox(
-            b,
-            bounds.X,
-            bounds.Y,
-            bounds.Width,
-            bounds.Height,
-            Color.White * opacity
+        NativeMenuPanel.Draw(b, bounds, opacity);
+
+        this.DrawContent(b, bounds);
+        this.DrawCloseButton(b, bounds);
+    }
+
+    private void DrawContent(SpriteBatch b, Rectangle bounds)
+    {
+        int x = bounds.X + ContentPadding;
+        int y = bounds.Y + 20;
+        string displayName = this.ResolveNpcDisplayName(this.TrackedNpcName!, this.response?.NpcDisplayName);
+        b.DrawString(Game1.dialogueFont, this.i18n.Get("tracker.title", new { npc = displayName }), new Vector2(x, y), Game1.textColor);
+        b.Draw(
+            Game1.staminaRect,
+            new Rectangle(x, bounds.Y + HeaderHeight - 8, bounds.Width - ContentPadding * 2, 1),
+            new Color(169, 118, 67) * 0.35f
         );
 
-        int x = bounds.X + 24;
-        int y = bounds.Y + 20;
-        string displayName = this.ResolveNpcDisplayName(this.TrackedNpcName, this.response?.NpcDisplayName);
-        b.DrawString(Game1.dialogueFont, this.i18n.Get("tracker.title", new { npc = displayName }), new Vector2(x, y), Game1.textColor);
-        y += 52;
+        y = bounds.Y + HeaderHeight;
+        string? hoverText = null;
+        foreach (TrackerRow row in this.GetRows())
+        {
+            this.DrawRow(b, bounds, row, y, ref hoverText);
+            y += RowHeight;
+        }
 
+        if (hoverText is not null)
+            IClickableMenu.drawHoverText(b, hoverText, Game1.smallFont);
+    }
+
+    private List<TrackerRow> GetRows()
+    {
         if (this.response is null)
-        {
-            this.DrawLine(b, this.i18n.Get("tracker.refreshing"), x, y, Game1.textColor);
-            return;
-        }
+            return new() { new("", this.i18n.Get("tracker.refreshing"), Game1.textColor) };
         if (this.response.Status != QueryStatus.Success)
-        {
-            this.DrawLine(b, this.TranslateStatus(this.response.Status), x, y, Color.DarkRed);
-            return;
-        }
+            return new() { new("", this.TranslateStatus(this.response.Status), Color.DarkRed) };
         if (this.response.Location is null)
-        {
-            this.DrawLine(b, this.TranslateStatus(this.response.LocationStatus), x, y, Color.DarkRed);
-            return;
-        }
+            return new() { new("", this.TranslateStatus(this.response.LocationStatus), Color.DarkRed) };
 
         LocationSnapshot location = this.response.Location;
         string locationName = this.locationNames.Resolve(location.InternalName, location.DisplayName);
-        this.DrawLine(
-            b,
-            this.i18n.Get("tracker.location", new
-            {
-                location = locationName,
-                x = location.TileX,
-                y = location.TileY
-            }),
-            x,
-            y,
-            Game1.textColor
-        );
-        y += 30;
+        List<TrackerRow> rows = new()
+        {
+            new(
+                this.i18n.Get("tracker.current-label"),
+                locationName,
+                Game1.textColor,
+                location.TileX,
+                location.TileY
+            )
+        };
 
         if (this.config.ShowNextStop)
         {
@@ -141,20 +159,13 @@ internal sealed class NpcTrackerOverlay
             if (next is not null)
             {
                 string nextName = this.locationNames.Resolve(next.LocationName, next.LocationDisplayName);
-                this.DrawLine(
-                    b,
-                    this.i18n.Get("tracker.next-stop", new
-                    {
-                        time = FormatTime(next.Time),
-                        location = nextName,
-                        x = next.TileX,
-                        y = next.TileY
-                    }),
-                    x,
-                    y,
-                    Game1.textColor
-                );
-                y += 30;
+                rows.Add(new(
+                    this.i18n.Get("tracker.next-label", new { time = FormatTime(next.Time) }),
+                    nextName,
+                    Game1.textColor,
+                    next.TileX,
+                    next.TileY
+                ));
             }
         }
 
@@ -165,26 +176,115 @@ internal sealed class NpcTrackerOverlay
             int dy = location.TileY - playerTile.Y;
             int distance = (int)Math.Round(Math.Sqrt(dx * dx + dy * dy));
             string direction = this.GetDirection(dx, dy);
-            this.DrawLine(
-                b,
-                this.i18n.Get("tracker.direction", new { direction, distance }),
-                x,
-                y,
+            rows.Add(new(
+                this.i18n.Get("tracker.direction-label"),
+                this.i18n.Get("tracker.direction-value", new { direction, distance }),
                 Game1.textColor
+            ));
+        }
+
+        return rows;
+    }
+
+    private void DrawRow(
+        SpriteBatch b,
+        Rectangle trackerBounds,
+        TrackerRow row,
+        int y,
+        ref string? hoverText
+    )
+    {
+        int left = trackerBounds.X + ContentPadding;
+        int right = trackerBounds.Right - ContentPadding;
+        int valueLeft = string.IsNullOrEmpty(row.Label) ? left : left + LabelWidth;
+        bool hasCoordinates = row.TileX is not null && row.TileY is not null;
+        Rectangle coordinateBounds = new(
+            right - CoordinateWidth,
+            y,
+            CoordinateWidth,
+            RowHeight
+        );
+        int valueRight = hasCoordinates ? coordinateBounds.X - 12 : right;
+        Rectangle valueBounds = new(valueLeft, y, Math.Max(1, valueRight - valueLeft), RowHeight);
+
+        if (!string.IsNullOrEmpty(row.Label))
+        {
+            b.DrawString(
+                Game1.smallFont,
+                row.Label,
+                new Vector2(left, y + 8),
+                new Color(121, 93, 67)
             );
         }
+
+        string fittedValue = this.FitText(row.Value, valueBounds.Width, out bool wasTrimmed);
+        b.DrawString(Game1.smallFont, fittedValue, new Vector2(valueBounds.X, y + 8), row.ValueColor);
+        if (wasTrimmed && valueBounds.Contains(Game1.getMousePosition(true)))
+            hoverText = row.Value;
+
+        if (hasCoordinates)
+        {
+            string coordinates = $"{row.TileX},{row.TileY}";
+            Vector2 size = Game1.smallFont.MeasureString(coordinates);
+            b.DrawString(
+                Game1.smallFont,
+                coordinates,
+                new Vector2(
+                    coordinateBounds.Right - size.X,
+                    y + 8
+                ),
+                new Color(94, 66, 43)
+            );
+        }
+    }
+
+    private bool CanShow()
+    {
+        return this.config.ShowTrackerOverlay && this.TrackedNpcName is not null;
+    }
+
+    private Rectangle GetCloseButtonBounds(Rectangle trackerBounds)
+    {
+        return new Rectangle(trackerBounds.Right - 56, trackerBounds.Y + 14, 40, 40);
+    }
+
+    private void DrawCloseButton(SpriteBatch b, Rectangle trackerBounds)
+    {
+        Rectangle bounds = this.GetCloseButtonBounds(trackerBounds);
+        bool hovered = bounds.Contains(Game1.getMousePosition(true));
+        if (hovered)
+            b.Draw(Game1.staminaRect, bounds, new Color(222, 184, 120) * 0.4f);
+
+        const string label = "×";
+        Vector2 size = Game1.smallFont.MeasureString(label);
+        b.DrawString(
+            Game1.smallFont,
+            label,
+            new Vector2(bounds.Center.X - size.X / 2, bounds.Center.Y - size.Y / 2 - 2),
+            hovered ? new Color(120, 78, 48) : Game1.textColor
+        );
+
+        if (hovered)
+            IClickableMenu.drawHoverText(b, this.i18n.Get("tracker.stop-tracking"), Game1.smallFont);
     }
 
     private Rectangle GetBounds()
     {
         const int margin = 24;
+        int overlayWidth = Math.Min(PreferredOverlayWidth, Game1.uiViewport.Width - margin * 2);
+        int overlayHeight = this.GetOverlayHeight();
         return this.config.TrackerPosition switch
         {
-            "TopRight" => new Rectangle(Game1.uiViewport.Width - OverlayWidth - margin, margin, OverlayWidth, OverlayHeight),
-            "BottomLeft" => new Rectangle(margin, Game1.uiViewport.Height - OverlayHeight - margin, OverlayWidth, OverlayHeight),
-            "BottomRight" => new Rectangle(Game1.uiViewport.Width - OverlayWidth - margin, Game1.uiViewport.Height - OverlayHeight - margin, OverlayWidth, OverlayHeight),
-            _ => new Rectangle(margin, margin, OverlayWidth, OverlayHeight)
+            "TopRight" => new Rectangle(Game1.uiViewport.Width - overlayWidth - margin, margin, overlayWidth, overlayHeight),
+            "BottomLeft" => new Rectangle(margin, Game1.uiViewport.Height - overlayHeight - margin, overlayWidth, overlayHeight),
+            "BottomRight" => new Rectangle(Game1.uiViewport.Width - overlayWidth - margin, Game1.uiViewport.Height - overlayHeight - margin, overlayWidth, overlayHeight),
+            _ => new Rectangle(margin, margin, overlayWidth, overlayHeight)
         };
+    }
+
+    private int GetOverlayHeight()
+    {
+        return HeaderHeight + Math.Max(1, this.GetRows().Count) * RowHeight + BottomPadding;
     }
 
     private bool IsPlayerInLocation(string internalName)
@@ -236,9 +336,23 @@ internal sealed class NpcTrackerOverlay
         };
     }
 
-    private void DrawLine(SpriteBatch b, string text, int x, int y, Color color)
+    private string FitText(string text, int maxWidth, out bool wasTrimmed)
     {
-        b.DrawString(Game1.smallFont, text, new Vector2(x, y), color);
+        if (Game1.smallFont.MeasureString(text).X <= maxWidth)
+        {
+            wasTrimmed = false;
+            return text;
+        }
+
+        const string ellipsis = "…";
+        int length = text.Length;
+        while (length > 1
+            && Game1.smallFont.MeasureString(text[..length] + ellipsis).X > maxWidth)
+        {
+            length--;
+        }
+        wasTrimmed = true;
+        return text[..length] + ellipsis;
     }
 
     private static string FormatTime(int time)
@@ -251,4 +365,12 @@ internal sealed record TrackerMenuState(
     string NpcName,
     string NpcDisplayName,
     NpcQueryResponse? Response
+);
+
+internal sealed record TrackerRow(
+    string Label,
+    string Value,
+    Color ValueColor,
+    int? TileX = null,
+    int? TileY = null
 );

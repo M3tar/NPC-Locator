@@ -1,7 +1,7 @@
 using StardewModdingAPI;
 using StardewValley;
 
-namespace MultiplayerNpcLocator.Framework;
+namespace NpcLocator.Framework;
 
 /// <summary>Resolves location names in the viewing player's language.</summary>
 internal sealed class LocationDisplayNameResolver

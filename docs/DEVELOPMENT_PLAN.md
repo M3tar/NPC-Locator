@@ -8,7 +8,7 @@
 
 ## 1. 项目摘要
 
-本项目拟开发一个独立的 SMAPI Mod，名称确定为“联机 NPC 定位器”（英文 `Multiplayer NPC Locator`）。它解决《星露谷物语》联机时，非主机玩家无法通过 Lookup Anything 获取远端 NPC 实时位置及当天完整日程的问题。
+本项目拟开发一个独立的 SMAPI Mod，名称确定为“NPC 定位器”（英文 `NPC Locator`）。它最初解决《星露谷物语》联机时非主机玩家无法通过 Lookup Anything 获取远端 NPC 实时位置及当天完整日程的问题，现已扩展为适用于单人玩家、联机主机和农场助手的独立查询与追踪工具。
 
 Mod 不修改 Lookup Anything，也不要求 Lookup Anything 作为依赖。主机与需要查询的联机玩家安装同一个 Mod 后，非主机玩家可以发起 NPC 查询；主机端读取完整世界状态，再将允许共享的信息返回给查询者。主机端默认静默运行，不弹窗、不暂停游戏、不改变 NPC 行为，也不修改存档。
 
@@ -597,9 +597,9 @@ GMCM 中将按“客户端功能”“追踪显示”“主机共享”分组。
 
 以下决策已由用户确认，后续开发原则上按此执行；如技术验证证明某项不可行，必须先更新决策记录并说明原因：
 
-1. **名称**：联机 NPC 定位器 / Multiplayer NPC Locator。
+1. **名称**：NPC 定位器 / NPC Locator。
 2. **作者**：Mercury。
-3. **唯一 ID**：`Mercury.MultiplayerNpcLocator`。
+3. **唯一 ID**：`Mercury.NpcLocator`。
 4. **版本**：从 0.1.0 私人内测版开始。
 5. **发布准备**：按未来公开发布标准组织代码与文档，首版先私下测试。
 6. **快捷键**：默认 F3，使用 KeybindList，可通过 GMCM 或配置文件修改。
