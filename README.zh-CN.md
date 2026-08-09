@@ -6,11 +6,11 @@
 
 [English](README.md)
 
-> **下载 Mod：** [前往 Nexus Mods 下载 NPC Locator（编号 50217）](https://www.nexusmods.com/stardewvalley/mods/50217)
+> **下载 Mod：** [前往 GitHub Releases 下载最新版本](https://github.com/M3tar/NPC-Locator/releases/latest) · [Nexus Mods（编号 50217）](https://www.nexusmods.com/stardewvalley/mods/50217)
 
-“NPC 定位器”是 March3tar 为《星露谷物语》制作的一款 SMAPI Mod。它能显示 NPC 当前所在地点、今日标准日程的下一站，以及玩家与 NPC 同地图时的大致方向和距离；单人玩家、联机主机和农场助手均可使用。
+“NPC 定位器”是 March3tar 为《星露谷物语》制作的一款 SMAPI Mod。它能显示 NPC 当前所在地点、今日标准日程的下一站，以及玩家与 NPC 同地图时的大致方向和距离；单人玩家、联机主机和非主机玩家均可使用。
 
-这个 Mod 最初用于解决农场助手在联机游戏中无法可靠查询 NPC 的问题，后来逐步扩展为适合日常拜访与物品交付任务的完整定位工具。它不会传送角色、修改 NPC 日程或任务，也不会把追踪状态写入存档。
+这个 Mod 最初用于解决非主机玩家在联机游戏中无法可靠查询 NPC 的问题，后来逐步扩展为适合日常拜访与物品交付任务的完整定位工具。它不会传送角色、修改 NPC 日程或任务，也不会把追踪状态写入存档。
 
 ## 主要功能
 
@@ -75,14 +75,15 @@
 - 0.1.0 已验证平台为 Windows；
 - Generic Mod Config Menu（GMCM）为可选依赖。
 
-农场助手如需定位远端地图中的 NPC，主机与该农场助手必须安装同一个兼容版本。单人玩家和主机会直接读取自己的本地世界数据。
+非主机玩家如需定位远端地图中的 NPC，主机与该非主机玩家必须安装同一个兼容版本。单人玩家和主机会直接读取自己的本地世界数据。
 
-## 快速开始
+## 下载与安装
 
 1. 安装 [SMAPI](https://smapi.io/)。
-2. 将发布包解压到《星露谷物语》的 `Mods` 文件夹。
-3. 确认最终路径为 `Mods/NpcLocator/manifest.json`。
-4. 通过 SMAPI 启动游戏，然后按 `F3`。
+2. 从 [GitHub Releases](https://github.com/M3tar/NPC-Locator/releases/latest) 或 [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/50217) 下载 `NpcLocator-<版本号>.zip`。
+3. 将压缩包解压到《星露谷物语》的 `Mods` 文件夹。
+4. 确认最终路径为 `Mods/NpcLocator/manifest.json`。
+5. 通过 SMAPI 启动游戏，然后按 `F3` 打开定位器。
 
 更新时，只需用新发布包中的 `NpcLocator` 文件夹替换原文件夹。
 
@@ -119,12 +120,12 @@
 
 ## 联机机制与隐私
 
-NPC 位置和日程以主机的数据为准。农场助手只会发送所选 NPC 的稳定内部名和查询选项，主机也只会返回其设置允许共享的定位结果。
+NPC 位置和日程以主机的数据为准。非主机玩家只会发送所选 NPC 的稳定内部名和查询选项，主机也只会返回其设置允许共享的定位结果。
 
 送货任务只从每名玩家自己的本地任务日志中读取，绝不会发送给主机。“NPC 定位器”不接受客户端任意代码或文件路径，不传送玩家，不改写 NPC 日程或任务，也不会在存档中保存追踪状态。
 
 <p align="center">
-  <img src="./assets/readme/multiplayer-workflow-zh-cn.svg" width="100%" alt="NPC 定位器为单人玩家、主机和农场助手解析查询的工作方式">
+  <img src="./assets/readme/multiplayer-workflow-zh-cn.svg" width="100%" alt="NPC 定位器为单人玩家、主机和非主机玩家解析查询的工作方式">
 </p>
 
 ## 已知限制

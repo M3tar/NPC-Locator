@@ -22,7 +22,7 @@
       <rect x="140" width="128" height="42" rx="10" fill="#f0d29b"/>
       <text x="204" y="28" text-anchor="middle" fill="#3b281d">主机</text>
       <rect x="280" width="164" height="42" rx="10" fill="#f0d29b"/>
-      <text x="362" y="28" text-anchor="middle" fill="#3b281d">农场助手</text>
+      <text x="362" y="28" text-anchor="middle" fill="#3b281d">非主机玩家</text>
     </g>
     <text x="2" y="302" fill="#aa9172" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', monospace" font-size="18">实时地点 · 每日日程 · 任务目标</text>
   </g>

@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-> **Download:** [NPC Locator on Nexus Mods — Mod #50217](https://www.nexusmods.com/stardewvalley/mods/50217)
+> **Download:** [Latest release on GitHub](https://github.com/M3tar/NPC-Locator/releases/latest) · [Nexus Mods — Mod #50217](https://www.nexusmods.com/stardewvalley/mods/50217)
 
 NPC Locator is a SMAPI mod for Stardew Valley by March3tar. It shows where an NPC is now, where their standard daily schedule takes them next, and how far away they are when you share a map. It works for solo players, multiplayer hosts, and farmhands.
 
@@ -77,12 +77,13 @@ These screenshots come from real testing: the spring captures are from a solo sa
 
 For a farmhand to locate NPCs on remote maps, both the host and that farmhand must install the same compatible version. Solo players and hosts read their local world directly.
 
-## Quick start
+## Download and install
 
 1. Install [SMAPI](https://smapi.io/).
-2. Extract the release archive into Stardew Valley's `Mods` folder.
-3. Confirm the resulting path is `Mods/NpcLocator/manifest.json`.
-4. Launch the game through SMAPI and press `F3`.
+2. Download `NpcLocator-<version>.zip` from [GitHub Releases](https://github.com/M3tar/NPC-Locator/releases/latest) or [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/50217).
+3. Extract the archive into Stardew Valley's `Mods` folder.
+4. Confirm the resulting path is `Mods/NpcLocator/manifest.json`.
+5. Launch the game through SMAPI and press `F3` to open the locator.
 
 To update, replace only the existing `NpcLocator` folder with the one from the new archive.
 

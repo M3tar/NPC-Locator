@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
   <title id="title">NPC 定位器在单人和联机游戏中的工作方式</title>
-  <desc id="desc">单人玩家读取本地世界，主机读取权威主机世界，农场助手向主机发送经过验证的 NPC 查询，并且只接收主机允许共享的位置和日程结果。</desc>
+  <desc id="desc">单人玩家读取本地世界，主机读取权威主机世界，非主机玩家向主机发送经过验证的 NPC 查询，并且只接收主机允许共享的位置和日程结果。</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M0 0L10 5L0 10Z" fill="#a95d32"/>
@@ -45,7 +45,7 @@
     <g id="farmhand" transform="translate(822 150)">
       <rect width="318" height="270" rx="18" fill="#fff7df" stroke="#d2aa70" stroke-width="3"/>
       <circle cx="46" cy="48" r="20" fill="#d89a3c"/>
-      <text x="82" y="57" fill="#3b281d" font-size="27" font-weight="800">农场助手</text>
+      <text x="82" y="57" fill="#3b281d" font-size="27" font-weight="800">非主机玩家</text>
       <line x1="46" y1="94" x2="46" y2="211" stroke="#a95d32" stroke-width="4" marker-end="url(#arrow)"/>
       <rect x="86" y="86" width="190" height="62" rx="12" fill="#f1d59d"/>
       <text x="181" y="112" text-anchor="middle" fill="#5d4937" font-size="18" font-weight="700">远端地图</text>
