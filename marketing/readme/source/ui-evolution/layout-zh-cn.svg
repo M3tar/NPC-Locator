@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="1740" viewBox="0 0 1200 1740" role="img" aria-labelledby="title desc">
+  <title id="title">NPC 定位器追踪栏界面的四次收敛</title>
+  <desc id="desc">从长地点名溢出，到信息重排、羊皮纸背景与原生菜单质感，展示 NPC 定位器追踪栏的四个设计阶段。</desc>
+
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M1 1L11 6L1 11" fill="none" stroke="#1689d8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M1 1L11 6L1 11" fill="none" stroke="#e66f2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <clipPath id="image-1"><rect x="66" y="218" width="520" height="255" rx="10"/></clipPath>
+    <clipPath id="image-2"><rect x="604" y="548" width="540" height="284" rx="10"/></clipPath>
+    <clipPath id="image-3"><rect x="66" y="887" width="540" height="292" rx="10"/></clipPath>
+    <clipPath id="image-4a"><rect x="66" y="1391" width="505" height="284" rx="10"/></clipPath>
+    <clipPath id="image-4b"><rect x="629" y="1391" width="505" height="284" rx="10"/></clipPath>
+  </defs>
+
+  <rect width="1200" height="1740" fill="#e8e7e4"/>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif">
+    <g id="heading" transform="translate(64 60)">
+      <text x="0" y="0" fill="#1689d8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="800" letter-spacing="2">UI ITERATION</text>
+      <text x="0" y="60" fill="#1d2024" font-size="48" font-weight="850">追踪栏 UI：四次收敛</text>
+      <text x="0" y="101" fill="#62666b" font-size="22">从“信息放得下”，到“界面融得进游戏”。</text>
+      <line x1="0" y1="132" x2="1072" y2="132" stroke="#c9c8c4" stroke-width="2"/>
+    </g>
+
+    <g id="stage-1">
+      <rect x="60" y="212" width="532" height="267" rx="13" fill="#000" opacity=".12" transform="translate(0 7)"/>
+      <image x="66" y="218" width="520" height="255" preserveAspectRatio="xMidYMid meet" clip-path="url(#image-1)" xlink:href="rc5-long-location.png"/>
+
+      <g transform="translate(650 222)">
+        <path d="M0 18C0 8 8 0 18 0S36 8 36 18c0 13-18 31-18 31S0 31 0 18Z" fill="#1689d8"/>
+        <circle cx="18" cy="17" r="8" fill="#e8e7e4"/>
+        <text x="18" y="23" text-anchor="middle" fill="#1689d8" font-size="17" font-weight="850">1</text>
+        <rect x="56" y="2" width="254" height="45" rx="12" fill="#f7f7f6"/>
+        <text x="76" y="33" fill="#1d2024" font-size="28" font-weight="850">长文本溢出</text>
+      </g>
+      <g transform="translate(650 294)">
+        <rect width="470" height="116" rx="14" fill="#f7f7f6"/>
+        <text x="22" y="39" fill="#1d2024" font-size="21" font-weight="800">存在问题</text>
+        <text x="22" y="75" fill="#51565b" font-size="20">长地点名溢出边框，</text>
+        <text x="22" y="103" fill="#51565b" font-size="20">信息挤在一起，重点不清晰。</text>
+      </g>
+      <path d="M590 414C640 451 678 490 706 534" fill="none" stroke="#1689d8" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    </g>
+
+    <g id="stage-2">
+      <g transform="translate(66 542)">
+        <path d="M0 18C0 8 8 0 18 0S36 8 36 18c0 13-18 31-18 31S0 31 0 18Z" fill="#1689d8"/>
+        <circle cx="18" cy="17" r="8" fill="#e8e7e4"/>
+        <text x="18" y="23" text-anchor="middle" fill="#1689d8" font-size="17" font-weight="850">2</text>
+        <rect x="56" y="2" width="254" height="45" rx="12" fill="#f7f7f6"/>
+        <text x="76" y="33" fill="#1d2024" font-size="28" font-weight="850">信息重排</text>
+      </g>
+      <g transform="translate(66 614)">
+        <rect width="470" height="193" rx="14" fill="#f7f7f6"/>
+        <text x="22" y="39" fill="#1689d8" font-size="20" font-weight="800">解决方案</text>
+        <text x="22" y="73" fill="#51565b" font-size="20">重构 UI，将标签、地点、坐标拆分，</text>
+        <text x="22" y="102" fill="#51565b" font-size="20">并以细线分隔。</text>
+        <text x="22" y="143" fill="#e66f2d" font-size="20" font-weight="800">新的问题</text>
+        <text x="22" y="176" fill="#51565b" font-size="20">原生展示框纹理拉伸后形成横向明暗色带。</text>
+      </g>
+
+      <rect x="598" y="542" width="552" height="296" rx="13" fill="#000" opacity=".12" transform="translate(0 7)"/>
+      <image x="604" y="548" width="540" height="284" preserveAspectRatio="xMidYMid meet" clip-path="url(#image-2)" xlink:href="rc7-aligned-columns.png"/>
+      <path d="M935 842C901 862 838 869 779 874" fill="none" stroke="#e66f2d" stroke-width="3" marker-end="url(#arrow-orange)"/>
+    </g>
+
+    <g id="stage-3">
+      <rect x="60" y="881" width="552" height="304" rx="13" fill="#000" opacity=".12" transform="translate(0 7)"/>
+      <image x="66" y="887" width="540" height="292" preserveAspectRatio="xMidYMid meet" clip-path="url(#image-3)" xlink:href="rc9-parchment-crop.png"/>
+
+      <g transform="translate(650 887)">
+        <path d="M0 18C0 8 8 0 18 0S36 8 36 18c0 13-18 31-18 31S0 31 0 18Z" fill="#e66f2d"/>
+        <circle cx="18" cy="17" r="8" fill="#e8e7e4"/>
+        <text x="18" y="23" text-anchor="middle" fill="#e66f2d" font-size="17" font-weight="850">3</text>
+        <rect x="56" y="2" width="290" height="45" rx="12" fill="#f7f7f6"/>
+        <text x="76" y="33" fill="#1d2024" font-size="28" font-weight="850">改用羊皮纸背景</text>
+      </g>
+      <g transform="translate(650 959)">
+        <rect width="470" height="191" rx="14" fill="#f7f7f6"/>
+        <text x="22" y="39" fill="#1689d8" font-size="20" font-weight="800">解决方案</text>
+        <text x="22" y="73" fill="#51565b" font-size="20">改用搜索菜单同源的羊皮纸背景，</text>
+        <text x="22" y="102" fill="#51565b" font-size="20">同时缩短边框宽度。</text>
+        <text x="22" y="143" fill="#e66f2d" font-size="20" font-weight="800">新的问题</text>
+        <text x="22" y="176" fill="#51565b" font-size="20">边框与阴影缺失，界面仍像一层覆盖物。</text>
+      </g>
+      <path d="M606 1125C652 1163 673 1198 682 1238" fill="none" stroke="#1689d8" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    </g>
+
+    <g id="stage-4">
+      <g transform="translate(364 1214)">
+        <path d="M0 18C0 8 8 0 18 0S36 8 36 18c0 13-18 31-18 31S0 31 0 18Z" fill="#1689d8"/>
+        <circle cx="18" cy="17" r="8" fill="#e8e7e4"/>
+        <text x="18" y="23" text-anchor="middle" fill="#1689d8" font-size="17" font-weight="850">4</text>
+        <rect x="56" y="2" width="320" height="45" rx="12" fill="#f7f7f6"/>
+        <text x="76" y="33" fill="#1d2024" font-size="28" font-weight="850">回归游戏原生质感</text>
+      </g>
+      <g transform="translate(278 1273)">
+        <rect width="644" height="90" rx="14" fill="#f7f7f6"/>
+        <text x="24" y="37" fill="#1689d8" font-size="20" font-weight="800">最终方案</text>
+        <text x="136" y="37" fill="#51565b" font-size="20">恢复原生菜单边框与阴影，中心改用稳定色填充。</text>
+        <text x="24" y="70" fill="#5f7d46" font-size="20" font-weight="800">结果</text>
+        <text x="84" y="70" fill="#51565b" font-size="20">信息清晰，并能自然融入不同季节与明暗场景。</text>
+      </g>
+
+      <rect x="60" y="1385" width="517" height="296" rx="13" fill="#000" opacity=".12" transform="translate(0 7)"/>
+      <rect x="623" y="1385" width="517" height="296" rx="13" fill="#000" opacity=".12" transform="translate(0 7)"/>
+      <image x="66" y="1391" width="1010" height="568" preserveAspectRatio="xMinYMin meet" clip-path="url(#image-4a)" xlink:href="rc10-spring-final.jpg"/>
+      <image x="629" y="1391" width="1010" height="568" preserveAspectRatio="xMinYMin meet" clip-path="url(#image-4b)" xlink:href="rc10-autumn-final.jpg"/>
+
+      <g transform="translate(82 1619)">
+        <rect width="154" height="39" rx="12" fill="#1d2024" opacity=".88"/>
+        <text x="77" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="750">明亮 · 春季</text>
+      </g>
+      <g transform="translate(645 1619)">
+        <rect width="154" height="39" rx="12" fill="#1d2024" opacity=".88"/>
+        <text x="77" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="750">暖色 · 秋季</text>
+      </g>
+    </g>
+
+    <line x1="64" y1="1704" x2="1136" y2="1704" stroke="#c9c8c4" stroke-width="2"/>
+    <text x="64" y="1731" fill="#777b80" font-size="18">迭代结论：先解决信息可靠性，再用层级、材质与游戏原生组件完成视觉收敛。</text>
+  </g>
+</svg>

@@ -27,20 +27,20 @@
 
 以下截图均来自实际测试：春季截图来自单人存档，秋季截图来自联机存档。点击图片可打开原始 4K 截图。
 
-<a href="./pictures/singleplayer-spring-npc-search-and-schedule.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-npc-search-and-schedule.jpg" width="100%" alt="春季单人存档中的 NPC 查询，显示艾芙琳的实时地点、格子坐标和今日标准日程">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-npc-search-and-schedule.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-npc-search-and-schedule.jpg" width="100%" alt="春季单人存档中的 NPC 查询，显示艾芙琳的实时地点、格子坐标和今日标准日程">
 </a>
 
 *在春季单人存档中查询 NPC，查看其实时地点、坐标和标准日程。*
 
-<a href="./pictures/multiplayer-autumn-tracker-direction-distance.jpg">
-  <img src="./assets/readme/screenshots/multiplayer-tracker-direction-distance.jpg" width="100%" alt="秋季联机存档中的 NPC 追踪栏，显示亚历克斯的实时地点、下一站、坐标、方向和距离">
+<a href="./assets/readme/screenshots/originals/multiplayer-autumn-tracker-direction-distance.jpg">
+  <img src="./assets/readme/screenshots/optimized/multiplayer-tracker-direction-distance.jpg" width="100%" alt="秋季联机存档中的 NPC 追踪栏，显示亚历克斯的实时地点、下一站、坐标、方向和距离">
 </a>
 
 *在秋季联机存档中持续追踪远端 NPC，查看当前位置、下一站、方向和大致距离。*
 
-<a href="./pictures/singleplayer-spring-delivery-quest-details.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-delivery-quest-details.jpg" width="100%" alt="春季单人存档的送货任务分页，显示目标 NPC、所需物品、持有数量和追踪操作">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-delivery-quest-details.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-delivery-quest-details.jpg" width="100%" alt="春季单人存档的送货任务分页，显示目标 NPC、所需物品、持有数量和追踪操作">
 </a>
 
 *在春季单人存档中浏览标准物品交付任务，并开始追踪任务目标。*
@@ -50,20 +50,20 @@
 
 ### 送货任务提示 · 单人 / 春季
 
-<a href="./pictures/singleplayer-spring-delivery-quest-prompt.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-delivery-quest-prompt.jpg" width="100%" alt="春季单人存档中的送货任务识别提示">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-delivery-quest-prompt.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-delivery-quest-prompt.jpg" width="100%" alt="春季单人存档中的送货任务识别提示">
 </a>
 
 ### 农场追踪栏 · 联机 / 秋季
 
-<a href="./pictures/multiplayer-autumn-tracker-farm.jpg">
-  <img src="./assets/readme/screenshots/multiplayer-tracker-on-farm.jpg" width="100%" alt="秋季联机农场中正在追踪艾米丽的 NPC 追踪栏">
+<a href="./assets/readme/screenshots/originals/multiplayer-autumn-tracker-farm.jpg">
+  <img src="./assets/readme/screenshots/optimized/multiplayer-tracker-on-farm.jpg" width="100%" alt="秋季联机农场中正在追踪艾米丽的 NPC 追踪栏">
 </a>
 
 ### 城镇追踪栏 · 单人 / 春季
 
-<a href="./pictures/singleplayer-spring-tracker-town.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-tracker-in-town.jpg" width="100%" alt="春季单人存档中正在追踪德米特里厄斯的 NPC 追踪栏">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-tracker-town.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-tracker-in-town.jpg" width="100%" alt="春季单人存档中正在追踪德米特里厄斯的 NPC 追踪栏">
 </a>
 
 </details>

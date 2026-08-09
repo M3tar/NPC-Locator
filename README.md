@@ -27,20 +27,20 @@ NPC Locator is independent from Lookup Anything and doesn't require it.
 
 These screenshots come from real testing: the spring captures are from a solo save, while the autumn captures are from a multiplayer save. The game UI is shown in Simplified Chinese; click any image to open the original 4K capture.
 
-<a href="./pictures/singleplayer-spring-npc-search-and-schedule.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-npc-search-and-schedule.jpg" width="100%" alt="NPC search showing Evelyn's current location, tile coordinates, and standard daily schedule in a spring solo save">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-npc-search-and-schedule.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-npc-search-and-schedule.jpg" width="100%" alt="NPC search showing Evelyn's current location, tile coordinates, and standard daily schedule in a spring solo save">
 </a>
 
 *Search an NPC and inspect their current location, coordinates, and standard schedule in a spring solo save.*
 
-<a href="./pictures/multiplayer-autumn-tracker-direction-distance.jpg">
-  <img src="./assets/readme/screenshots/multiplayer-tracker-direction-distance.jpg" width="100%" alt="NPC tracker showing Alex's current location, next stop, coordinates, direction, and distance in an autumn multiplayer save">
+<a href="./assets/readme/screenshots/originals/multiplayer-autumn-tracker-direction-distance.jpg">
+  <img src="./assets/readme/screenshots/optimized/multiplayer-tracker-direction-distance.jpg" width="100%" alt="NPC tracker showing Alex's current location, next stop, coordinates, direction, and distance in an autumn multiplayer save">
 </a>
 
 *Keep a remote NPC visible with their current location, next stop, direction, and approximate distance in an autumn multiplayer save.*
 
-<a href="./pictures/singleplayer-spring-delivery-quest-details.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-delivery-quest-details.jpg" width="100%" alt="Delivery quest tab showing the target NPC, requested item, held count, and tracking action in a spring solo save">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-delivery-quest-details.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-delivery-quest-details.jpg" width="100%" alt="Delivery quest tab showing the target NPC, requested item, held count, and tracking action in a spring solo save">
 </a>
 
 *Browse a standard item-delivery quest and start tracking its target from a spring solo save.*
@@ -50,20 +50,20 @@ These screenshots come from real testing: the spring captures are from a solo sa
 
 ### Delivery quest prompt · solo / spring
 
-<a href="./pictures/singleplayer-spring-delivery-quest-prompt.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-delivery-quest-prompt.jpg" width="100%" alt="Delivery quest detection prompt in a spring solo save">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-delivery-quest-prompt.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-delivery-quest-prompt.jpg" width="100%" alt="Delivery quest detection prompt in a spring solo save">
 </a>
 
 ### Tracker on the farm · multiplayer / autumn
 
-<a href="./pictures/multiplayer-autumn-tracker-farm.jpg">
-  <img src="./assets/readme/screenshots/multiplayer-tracker-on-farm.jpg" width="100%" alt="NPC tracker following Emily from an autumn multiplayer farm">
+<a href="./assets/readme/screenshots/originals/multiplayer-autumn-tracker-farm.jpg">
+  <img src="./assets/readme/screenshots/optimized/multiplayer-tracker-on-farm.jpg" width="100%" alt="NPC tracker following Emily from an autumn multiplayer farm">
 </a>
 
 ### Tracker in town · solo / spring
 
-<a href="./pictures/singleplayer-spring-tracker-town.jpg">
-  <img src="./assets/readme/screenshots/singleplayer-tracker-in-town.jpg" width="100%" alt="NPC tracker following Demetrius in a spring solo save">
+<a href="./assets/readme/screenshots/originals/singleplayer-spring-tracker-town.jpg">
+  <img src="./assets/readme/screenshots/optimized/singleplayer-tracker-in-town.jpg" width="100%" alt="NPC tracker following Demetrius in a spring solo save">
 </a>
 
 </details>
